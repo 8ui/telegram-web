@@ -1,9 +1,9 @@
 const path = require('path')
-const IconfontWebpackPlugin = require('iconfont-webpack-plugin')
 const NODE_ENV = process.env.NODE_ENV || 'development'
 const webpack = require('webpack')
 const autoprefixer = require('autoprefixer')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const postcssNormalize = require('postcss-normalize');
 
 module.exports = {
   mode: 'development',
@@ -41,53 +41,78 @@ module.exports = {
         loaders: ['babel-loader'],
         include: [path.resolve(__dirname, 'src')]
       },
+      // {
+      //   test: /\.(scss)$/,
+      //   use: [
+      //     {
+      //       loader: 'style-loader',
+      //       options: {
+      //         sourceMap: true
+      //       }
+      //     },
+      //     {
+      //       loader: 'css-loader',
+      //       options: {
+      //         sourceMap: true
+      //       }
+      //     },
+      //     {
+      //       loader: 'sass-loader',
+      //       options: {
+      //         sourceMap: true
+      //       }
+      //     },
+      //     { loader: 'sass-resources-loader',
+      //       options: {
+      //         sourceMap: true,
+      //         resources: [
+      //           './src/styles/variables.scss',
+      //           './src/styles/color-mixins.scss',
+      //           './src/styles/typografy.scss',
+      //         ]
+      //       }
+      //     },
+      //     {
+      //       loader: 'postcss-loader',
+      //     },
+      //   ]
+      // },
       {
-        test: /\.(css|scss)$/,
+        test: /\.scss$/,
         use: [
-          {
-            loader: 'style-loader',
-            options: {
-              sourceMap: true
-            }
-          },
+          'style-loader',
           {
             loader: 'css-loader',
             options: {
-              sourceMap: true
-            }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true
-            }
-          },
-          {
+              // localIdentName: '[path][name]--[local]',
+            },
+          }, {
             loader: 'postcss-loader',
             options: {
-              plugins: loader => [new IconfontWebpackPlugin(loader)]
+              plugins: () => [
+                // require('autoprefixer'),
+              ],
+            },
+          }, {
+            loader: 'sass-loader',
+            options: {
+              // includePaths: [].concat(project.paths.assets()),
+            },
+          },
+          { loader: 'sass-resources-loader',
+            options: {
+              sourceMap: true,
+              resources: [
+                './src/styles/variables.scss',
+                './src/styles/color-mixins.scss',
+                './src/styles/typografy.scss',
+              ]
             }
-          }
-        ]
-      },
-      {
-        test: /\.pug$/,
-        use: [
-          'file-loader?name=[path][name].html',
-          'pug-html-loader?pretty&exports=false'
-        ]
-      },
-      {
-        test: /\.php$/,
-        use: 'file-loader'
+          },
+        ],
       },
       {
         test: /\.zip$/,
-        use: 'file-loader'
-      },
-      {
-        test: /\.(jpg|jpeg|gif|png|svg)$/,
-        exclude: /node_modules/,
         use: 'file-loader'
       },
       {
@@ -107,12 +132,14 @@ module.exports = {
           path: path.join(__dirname, 'public')
         },
         postcss: [
-          require('autoprefixer')({
-            browsers: ['last 2 versions', 'IE > 10'],
-            cascade: true,
-            remove: true
+          require('postcss-flexbugs-fixes'),
+          require('postcss-preset-env')({
+            autoprefixer: {
+              flexbox: 'no-2009',
+            },
+            stage: 3,
           }),
-          require('css-mqpacker')()
+          postcssNormalize(),
         ]
       }
     }),
@@ -127,15 +154,6 @@ module.exports = {
       filename: 'index.html'
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.LoaderOptionsPlugin({
-      options: {
-        postcss: [
-          autoprefixer({
-            browsers: ['last 3 version', 'ie >= 10']
-          })
-        ]
-      }
-    })
+    new webpack.NoEmitOnErrorsPlugin()
   ]
 }

@@ -62,7 +62,6 @@ export {
 
 class Dom {
   static Component = Component;
-  static renderDom = renderDom;
   static createElement = createElement
   static Fragment = Fragment
 }

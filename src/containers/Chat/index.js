@@ -1,21 +1,19 @@
 import Dom from '@dom'
 
-class Home extends Dom.Component {
-  state = {
-    foo: 'bar'
-  }
+import SidebarLeft from '@organisms/SidebarLeft'
+import './styles.scss'
 
+class Home extends Dom.Component {
   onClick = (e) => {
-    console.log(this.state);
     e.preventDefault()
   }
 
   render() {
     const data = { foo: 'bar' };
     return (
-      <h2 onClick={this.onClick}>
-        PRESS {data.foo}
-      </h2>
+      <div className="chat">
+        <SidebarLeft />
+      </div>
     )
   }
 }

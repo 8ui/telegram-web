@@ -1,0 +1,53 @@
+.body-text {
+  font-weight: 400;
+  font-size: #{$SIZE_BODY}px;
+  @include themed() {
+    color: t('label');
+  }
+}
+
+.largeTitle {
+  font-size: #{$SIZE_LARGE_TITLE}px;
+  @extend .body-text;
+}
+.title1 {
+  font-size: #{$SIZE_TITLE1}px;
+  @extend .body-text;
+}
+.title2 {
+  font-size: #{$SIZE_TITLE2}px;
+  @extend .body-text;
+}
+.title3 {
+  font-size: #{$SIZE_TITLE3}px;
+  @extend .body-text;
+}
+.headline {
+  font-size: #{$SIZE_HEADLINE}px;
+  @extend .body-text;
+  font-weight: 600;
+}
+.callout {
+  font-size: #{$SIZE_CALLOUT}px;
+  @extend .body-text;
+}
+.subhead {
+  font-size: #{$SIZE_SUBHEAD}px;
+  @extend .body-text;
+}
+.footnote {
+  font-size: #{$SIZE_FOOTNOTE}px;
+  @extend .body-text;
+}
+.caption1 {
+  font-size: #{$SIZE_CAPTION1}px;
+  @extend .body-text;
+}
+.caption2 {
+  font-size: #{$SIZE_CAPTION2}px;
+  @extend .body-text;
+}
+.textSum {
+  opacity: 0.6;
+  @extend .body-text;
+}

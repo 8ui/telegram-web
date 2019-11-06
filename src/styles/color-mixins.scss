@@ -1,0 +1,96 @@
+$themes: (
+  light: (
+    label: #000000ff,
+    secondaryLabel: #3c3c4399,
+    tertiaryLabel: #3c3c434c,
+    quaternaryLabel: #3c3c432d,
+    systemFill: #78788033,
+    secondarySystemFill: #78788028,
+    tertiarySystemFill: #7676801e,
+    quaternarySystemFill: #74748014,
+    placeholderText: #3c3c434c,
+    systemColor: #ffffffff,
+    systemBackground: #ffffffff,
+    secondarySystemBackground: #f2f2f7ff,
+    tertiarySystemBackground: #ffffffff,
+    systemGroupedBackground: #f2f2f7ff,
+    secondarySystemGroupedBackground: #ffffffff,
+    tertiarySystemGroupedBackground: #f2f2f7ff,
+    separator: #3c3c4349,
+    opaqueSeparator: #c6c6c8ff,
+    link: #007affff,
+    darkText: #000000ff,
+    lightText: #ffffff99,
+    systemBlue: #007affff,
+    systemGreen: #34c759ff,
+    systemIndigo: #5856d6ff,
+    systemOrange: #ff9500ff,
+    systemPink: #ff2d55ff,
+    systemPurple: #af52deff,
+    systemRed: #ff3b30ff,
+    systemTeal: #5ac8faff,
+    systemYellow: #ffcc00ff,
+    systemGray: #8e8e93ff,
+    systemGray2: #aeaeb2ff,
+    systemGray3: #c7c7ccff,
+    systemGray4: #d1d1d6ff,
+    systemGray5: #e5e5eaff,
+    systemGray6: #f2f2f7ff
+  ),
+  dark: (
+    label: #ffffffff,
+    secondaryLabel: #ebebf599,
+    tertiaryLabel: #ebebf54c,
+    quaternaryLabel: #ebebf52d,
+    systemFill: #7878805b,
+    secondarySystemFill: #78788051,
+    tertiarySystemFill: #7676803d,
+    quaternarySystemFill: #7676802d,
+    placeholderText: #ebebf54c,
+    systemColor: #000000ff,
+    systemBackground: #000000ff,
+    secondarySystemBackground: #1c1c1eff,
+    tertiarySystemBackground: #2c2c2eff,
+    systemGroupedBackground: #000000ff,
+    secondarySystemGroupedBackground: #1c1c1eff,
+    tertiarySystemGroupedBackground: #2c2c2eff,
+    separator: #54545899,
+    opaqueSeparator: #38383aff,
+    link: #0984ffff,
+    darkText: #000000ff,
+    lightText: #ffffff99,
+    systemBlue: #0a84ffff,
+    systemGreen: #30d158ff,
+    systemIndigo: #5e5ce6ff,
+    systemOrange: #ff9f0aff,
+    systemPink: #ff375fff,
+    systemPurple: #bf5af2ff,
+    systemRed: #ff453aff,
+    systemTeal: #64d2ffff,
+    systemYellow: #ffd60aff,
+    systemGray: #8e8e93ff,
+    systemGray2: #636366ff,
+    systemGray3: #48484aff,
+    systemGray4: #3a3a3cff,
+    systemGray5: #2c2c2eff,
+    systemGray6: #1c1c1eff
+  ),
+);
+
+@mixin themed() {
+  @each $theme, $map in $themes {
+    .theme-#{$theme} & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), '#{$key}');
+        $theme-map: map-merge($theme-map, ($key: $value)) !global;
+      }
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@function t($key) {
+  @return map-get($theme-map, $key);
+}
