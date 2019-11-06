@@ -6,9 +6,9 @@ class ButtonIcon extends Dom.Component {
   render() {
     const { name, onClick } = this.props;
     return (
-      <div className="avatar">
-        <i className={`icon icon-avatar_savedmessages`}></i>
-      </div>
+      <a onClick={onClick} className="button-icon">
+        <i className={`icon icon-${name}`}></i>
+      </a>
     )
   }
 }

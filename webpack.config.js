@@ -16,6 +16,10 @@ module.exports = {
     filename: NODE_ENV === 'development' ? '[name].js' : '[name][hash:6].js'
   },
   devtool: NODE_ENV === 'development' ? 'source-map' : 'none',
+  devServer: {
+    contentBase: './public',
+    hot: true,
+  },
   watch: NODE_ENV === 'development',
   watchOptions: {
     aggregateTimeout: 300
@@ -28,6 +32,7 @@ module.exports = {
       '@organisms': path.join(__dirname, '/src/components/organisms'),
       '@dom': path.join(__dirname, '/src/core/utils/dom'),
       '@core': path.join(__dirname, '/src/core'),
+      '@assets': path.join(__dirname, '/assets'),
     }
   },
   resolveLoader: {
@@ -41,42 +46,6 @@ module.exports = {
         loaders: ['babel-loader'],
         include: [path.resolve(__dirname, 'src')]
       },
-      // {
-      //   test: /\.(scss)$/,
-      //   use: [
-      //     {
-      //       loader: 'style-loader',
-      //       options: {
-      //         sourceMap: true
-      //       }
-      //     },
-      //     {
-      //       loader: 'css-loader',
-      //       options: {
-      //         sourceMap: true
-      //       }
-      //     },
-      //     {
-      //       loader: 'sass-loader',
-      //       options: {
-      //         sourceMap: true
-      //       }
-      //     },
-      //     { loader: 'sass-resources-loader',
-      //       options: {
-      //         sourceMap: true,
-      //         resources: [
-      //           './src/styles/variables.scss',
-      //           './src/styles/color-mixins.scss',
-      //           './src/styles/typografy.scss',
-      //         ]
-      //       }
-      //     },
-      //     {
-      //       loader: 'postcss-loader',
-      //     },
-      //   ]
-      // },
       {
         test: /\.scss$/,
         use: [
@@ -116,10 +85,24 @@ module.exports = {
         use: 'file-loader'
       },
       {
-        test: /\.(woff|woff2|eot|ttf)$/,
-        exclude: /node_modules/,
-        use: 'file-loader'
-      }
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[hash].[ext]',
+              outputPath: 'icons/'
+            }
+          }
+        ]
+      },
+      {
+		    test: /\.svg/,
+		    use: {
+	        loader: 'svg-url-loader',
+	        options: {}
+		    }
+			}
     ]
   },
   plugins: [

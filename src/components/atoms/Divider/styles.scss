@@ -1,0 +1,9 @@
+.divider {
+  height: 1px;
+  margin: 4px 0 7px;
+  width: 100%;
+
+  @include themed() {
+    background-color: t('separator');
+  }
+}

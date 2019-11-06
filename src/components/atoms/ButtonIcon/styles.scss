@@ -1,0 +1,20 @@
+.button-icon {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  flex-basis: 44px;
+  border-radius: 22px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.4s ease;
+
+  > .icon {
+    font-size: 24px;
+    color: rgb(95, 100, 104);
+  }
+
+  &:active {
+    background-color: rgba(#707579, 0.08);
+  }
+}

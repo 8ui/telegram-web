@@ -7,18 +7,22 @@ const addEventListener = (el, name, fn) => {
 }
 
 class Component {
-
+  constructor(props) {
+    this.props = props || {};
+  }
 }
 
 const renderDom = (id, component) => {
   const d = new component()
   const el = document.getElementById(id);
-  el.appendChild(d.render());
+  el.replaceWith(d.render());
 }
 
 const createElement = (tag, attrs, ...children) => {
+  // if (attrs) console.log('attrs', attrs);
+
   if (typeof tag === 'function') {
-    const child = new tag();
+    const child = new tag(attrs);
     if (child instanceof Component) {
       return child.render();
     }
@@ -26,9 +30,7 @@ const createElement = (tag, attrs, ...children) => {
 
   if (tag) {
     const el = document.createElement(tag);
-
     if (attrs && typeof attrs === 'object') {
-      console.log(attrs);
       Object.keys(attrs).forEach(attr => {
         if (typeof attrs[attr] === 'function') {
           addEventListener(el, attr, attrs[attr]);

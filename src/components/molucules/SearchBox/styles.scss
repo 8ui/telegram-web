@@ -1,0 +1,31 @@
+.search-box {
+  position: relative;
+  display: flex;
+  height: 44px;
+  flex: 1;
+
+  &__input {
+    display: block;
+    flex: 1;
+    padding: 0 0 2px 42px;
+    margin: 0;
+    border: none;
+    background: rgba(#707579, 0.08);
+    border-radius: 22px;
+    outline: none;
+    font-size: #{$SIZE_BODY}px;
+  }
+  > .icon {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    width: 48px;
+    pointer-events: none;
+    color: rgb(95, 100, 104);
+  }
+}
