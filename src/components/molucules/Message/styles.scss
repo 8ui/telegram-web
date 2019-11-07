@@ -1,0 +1,58 @@
+.message {
+  padding-top: 8px;
+  display: flex;
+
+  &-my {
+    justify-content: flex-end;
+    .message-bubble {
+      background: #eeffde !important;
+    }
+  }
+
+  &-bubble {
+    padding: 7px;
+    border-radius: 12px;
+    box-shadow: 0px 1px 2px rgba(black, 0.1);
+    @include themed() {
+      background: t('systemBackground');
+    }
+  }
+  &-text {
+    margin-left: 2px;
+  }
+
+  &-audio {
+    display: flex;
+    flex-direction: row;
+
+    &__play {
+      margin: 1px 12px 1px 1px;
+      padding-left: 13.5px;
+      width: 54px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      border-radius: 50%;
+      cursor: pointer;
+      @include themed() {
+        background: t('systemBlue');
+      }
+
+      .icon {
+        font-size: 31px;
+        color: white;
+      }
+    }
+    &__timeline {
+      height: 33px;
+      width: 192px;
+      margin-right: 3px;
+    }
+    &__duration {
+      font-size: #{$SIZE_SUBHEAD}px;
+      @include themed() {
+        color: t('secondaryLabel');
+      }
+    }
+  }
+}

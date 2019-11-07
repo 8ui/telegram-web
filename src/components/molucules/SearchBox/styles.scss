@@ -10,10 +10,12 @@
     padding: 0 0 2px 42px;
     margin: 0;
     border: none;
-    background: rgba(#707579, 0.08);
+    @include themed() {
+      background: t('secondarySystemBackground');
+    }
     border-radius: 22px;
     outline: none;
-    font-size: #{$SIZE_BODY}px;
+    font-size: 16px;
   }
   > .icon {
     position: absolute;

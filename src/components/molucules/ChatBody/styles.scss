@@ -1,0 +1,13 @@
+.chat-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: #e6ebee;
+  padding: 0 71px;
+
+  .message-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}

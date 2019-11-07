@@ -14,7 +14,9 @@
     color: rgb(95, 100, 104);
   }
 
-  &:active {
-    background-color: rgba(#707579, 0.08);
+  &:hover {
+    @include themed() {
+      background: t('secondarySystemBackground');
+    }
   }
 }

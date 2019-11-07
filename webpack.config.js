@@ -74,7 +74,7 @@ module.exports = {
               resources: [
                 './src/styles/variables.scss',
                 './src/styles/color-mixins.scss',
-                './src/styles/typografy.scss',
+                // './src/styles/typografy.scss',
               ]
             }
           },

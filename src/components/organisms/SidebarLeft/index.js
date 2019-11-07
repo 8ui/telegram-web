@@ -14,10 +14,9 @@ class SidebarLeft extends Dom.Component {
           <SearchBox />
         </div>
         <div className="sidebar-left__body">
-          <ContactItem />
+          <ContactItem pinned />
           <ContactItem />
           <Divider />
-          <ContactItem />
           <ContactItem />
           <ContactItem />
           <ContactItem />

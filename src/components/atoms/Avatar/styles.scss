@@ -5,6 +5,7 @@
   border-radius: 50%;
   align-items: center;
   justify-content: center;
+  position: relative;
 
   @include themed() {
     background-color: t('systemBlue');
@@ -13,5 +14,23 @@
   > .icon {
     font-size: 54px;
     color: white;
+  }
+
+  &--online {
+    color: white;
+    &:after {
+      content: '';
+      display: block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      position: absolute;
+      right: 1px;
+      bottom: 1px;
+      border: 2px solid;
+      @include themed() {
+        background-color: t('systemGreen');
+      }
+    }
   }
 }

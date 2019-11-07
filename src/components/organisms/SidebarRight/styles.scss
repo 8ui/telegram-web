@@ -1,3 +1,8 @@
 .sidebar-right {
+  width: 420px;
 
+  @include themed() {
+    background-color: t('systemBackground');
+    border-left: 1px solid t('separator');
+  }
 }

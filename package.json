@@ -13,7 +13,10 @@
   },
   "dependencies": {
     "iconfont-webpack-plugin": "^3.1.0",
-    "node-sass": "^4.11.0"
+    "node-sass": "^4.11.0",
+    "telegram-js": "^0.2.4",
+    "telegram-mt-node": "^0.9.7",
+    "telegram-tl-node": "^0.11.5"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.51",

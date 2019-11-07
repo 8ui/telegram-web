@@ -1,13 +1,109 @@
 .contact-item {
   position: relative;
-  height: 76px;
-  background-color: rgba(red, 0.3);
-  padding: 0 17px 2px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  cursor: pointer;
+  padding: 0 8px 4px;
 
-  &__avatar {
+  &:hover {
+    > div {
+      @include themed() {
+        background-color: t('secondarySystemBackground');
+      }
+    }
+  }
 
+  &__wrapper {
+    padding: 0 0 0 9px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 72px;
+    border-radius: 10px;
+    transition: background-color 0.4s ease;
+  }
+
+  &__body {
+    flex: 1;
+    height: 100%;
+    padding: 14px 0 0 9px;
+  }
+  &__title {
+    font-weight: 500;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 250px;
+      text-overflow: ellipsis;
+    }
+    .icon {
+      font-size: 19px;
+      @include themed() {
+        color: t('systemGreen');
+      }
+    }
+  }
+  &__subtitle {
+    padding: 5px 0 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 260px;
+    @include themed() {
+      color: t('secondaryLabel');
+    }
+  }
+  &__info {
+    height: 100%;
+    padding: 17px 10px 0 0;
+    text-align: right;
+    position: relative;
+    width: 44px;
+  }
+  &__time {
+    font-size: 12px;
+    padding: 0 3px 0 0;
+    font-weight: 300;
+    @include themed() {
+      color: t('secondaryLabel');
+    }
+  }
+  &__badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    border-radius: 12px;
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 1px 5px 0;
+    color: white;
+    font-weight: 500;
+    font-size: 13.5px;
+    background-color: #4dcd5e;
+
+    &--pinned {
+      background-color: #c4c9cc !important;
+      padding: 0;
+      font-size: 24px;
+
+      font-family: icons!important;
+      speak: none;
+      font-style: normal;
+      font-weight: 400;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+
+      &:before {
+        content: "\E942";
+      }
+    }
   }
 }

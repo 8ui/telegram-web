@@ -1,0 +1,44 @@
+.chat-header {
+  height: 61px;
+  flex-basis: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  cursor: default;
+  @include themed() {
+    border-bottom: 1px solid t('separator');
+  }
+
+  &__user {
+    padding: 0 19px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    cursor: pointer;
+
+    > div.avatar {
+      margin-right: 16px;
+    }
+
+    &__title {
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+    &__subtitle {
+      font-size: #{$SIZE_SUBHEAD}px;
+      @include themed() {
+        color: t('systemBlue');
+      }
+    }
+  }
+
+  &__actions {
+    padding: 0 13px 0 0;
+
+    > a {
+      margin-left: 4px;
+    }
+  }
+}

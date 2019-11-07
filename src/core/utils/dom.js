@@ -18,6 +18,16 @@ const renderDom = (id, component) => {
   el.replaceWith(d.render());
 }
 
+const setAttribute = (el, key, value) => {
+  if (typeof value === 'object') {
+    Object.keys(value).forEach(k => {
+      el[key][k] = value[k];
+    })
+  } else {
+    el.setAttribute(key === 'className' ? 'class' : key, value)
+  }
+}
+
 const createElement = (tag, attrs, ...children) => {
   // if (attrs) console.log('attrs', attrs);
 
@@ -35,16 +45,20 @@ const createElement = (tag, attrs, ...children) => {
         if (typeof attrs[attr] === 'function') {
           addEventListener(el, attr, attrs[attr]);
         } else {
-          el.setAttribute(attr === 'className' ? 'class' : attr, attrs[attr])
+          setAttribute(el, attr, attrs[attr])
         }
       })
     }
 
     children.forEach(item => {
-      if (typeof item === 'string') {
+      if (['string', 'number'].includes(typeof item)) {
         el.innerHTML += item;
       } else if (item) {
-        el.appendChild(item)
+        try {
+          el.appendChild(item)
+        } catch (e) {
+          console.log(item, e);
+        }
       }
     })
     return el
