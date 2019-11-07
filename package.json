@@ -1,5 +1,5 @@
 {
-  "name": "vanilla-js-boilerplate",
+  "name": "telegram-web-contest",
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
@@ -12,11 +12,12 @@
     "clean": "rm -rf target"
   },
   "dependencies": {
-    "iconfont-webpack-plugin": "^3.1.0",
+    "events": "^3.0.0",
     "node-sass": "^4.11.0",
-    "telegram-js": "^0.2.4",
-    "telegram-mt-node": "^0.9.7",
-    "telegram-tl-node": "^0.11.5"
+    "tdweb": "^1.5.0"
+  },
+  "node": {
+    "fs": "empty"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.51",
@@ -54,6 +55,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^0.9.0",
+    "fs": "0.0.1-security",
     "html-webpack-plugin": "^3.2.0",
     "loader": "^2.1.1",
     "postcss": "^5.2.6",

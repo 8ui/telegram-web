@@ -13,7 +13,8 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'public'),
-    filename: NODE_ENV === 'development' ? '[name].js' : '[name][hash:6].js'
+    filename: NODE_ENV === 'development' ? '[name].js' : '[name][hash:6].js',
+    // publicPath: path.join(__dirname, 'public'),
   },
   devtool: NODE_ENV === 'development' ? 'source-map' : 'none',
   devServer: {
@@ -133,7 +134,7 @@ module.exports = {
       NODE_ENV: JSON.stringify(NODE_ENV)
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, '/src/views/index.html'),
+      template: path.join(__dirname, '/public/index.html'),
       filename: 'index.html'
     }),
     new webpack.HotModuleReplacementPlugin(),
