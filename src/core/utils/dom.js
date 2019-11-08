@@ -8,8 +8,58 @@ const addEventListener = (el, name, fn) => {
 
 class Component {
   constructor(props) {
-    console.log(props, this);
     this.props = {...this.defaultProps, ...(props || {})};
+  }
+
+  componentDidmount() { }
+
+  componentWillmount() { }
+
+  componentWillUnmount() { }
+
+  shouldComponentUpdate() { return true }
+
+  componentWillUpdate() { }
+
+  componentDidUpdate() { }
+
+  draw = (update = false) => {
+    const elem = this.render();
+    if (this.elem) {
+      this.elem.replaceWith(elem);
+    }
+    this.elem = elem;
+    this.componentWillmount()
+    setTimeout(this.componentDidmount.bind(this))
+    return this.elem;
+  }
+
+  redraw = (nextProps, nextState) => {
+    if (this.shouldComponentUpdate(nextProps, nextState)) {
+      this.componentWillUpdate(nextProps, nextState);
+
+      this.props = nextProps;
+      this.state = nextState;
+
+      this.draw(true);
+
+      this.componentDidUpdate(nextProps, nextState);
+    } else {
+      this.props = nextProps;
+      this.state = nextState;
+    }
+  }
+
+  setState = (data, fn) => {
+    const state = typeof data === 'function'
+      ? data(this.state) : data
+
+    const nextState = { ...this.state, ...state };
+
+    if (fn) {
+      fn(nextState);
+    }
+    this.redraw(this.props, nextState);
   }
 }
 Component.defaultProps = {}
@@ -18,11 +68,13 @@ Component.defaultProps = {}
 const renderDom = (id, component) => {
   const d = new component()
   const el = document.getElementById(id);
-  el.replaceWith(d.render());
+  el.replaceWith(d.draw());
 }
 
 const setAttribute = (el, key, value) => {
-  if (typeof value === 'object') {
+  if (value === null) {
+
+  } else if (typeof value === 'object') {
     Object.keys(value).forEach(k => {
       el[key][k] = value[k];
     })
@@ -32,16 +84,18 @@ const setAttribute = (el, key, value) => {
 }
 
 const createElement = (tag, attrs, ...children) => {
-  // if (attrs) console.log('attrs', attrs);
-
   if (typeof tag === 'function') {
-    const child = new tag({...tag.defaultProps, ...(attrs || {})});
-    if (child instanceof Component) {
-      return child.render();
+    const props = {...(tag.defaultProps || {}), ...(attrs || {}), children: (children.length ? children : undefined)}
+    if (tag.prototype instanceof Component) {
+      const child = new tag(props);
+      return child.draw();
+    } else {
+      return tag(props);
     }
   }
 
   if (tag) {
+    // console.log(tag, children.flat());
     const el = document.createElement(tag);
     if (attrs && typeof attrs === 'object') {
       Object.keys(attrs).forEach(attr => {
@@ -53,7 +107,7 @@ const createElement = (tag, attrs, ...children) => {
       })
     }
 
-    children.forEach(item => {
+    children.flat().forEach(item => {
       if (['string', 'number'].includes(typeof item)) {
         el.innerHTML += item;
       } else if (item) {
@@ -68,8 +122,8 @@ const createElement = (tag, attrs, ...children) => {
   }
 }
 
-const Fragment = (...props) => {
-  console.log(...props);
+const Fragment = () => {
+  return null;
 }
 
 export {

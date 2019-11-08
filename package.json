@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
-    "start": "webpack-dev-server --https --key ./ssl/key.pem --cert ./ssl/cert.pem .",
+    "start-https": "webpack-dev-server --https --key ./ssl/key.pem --cert ./ssl/cert.pem .",
+    "start": "webpack-dev-server .",
     "watch": "webpack --watch",
     "sass": "sass --watch src/styles/index.scss:public/bundle.css",
     "watch:win": "./node_modules/.bin/webpack   --watch .",

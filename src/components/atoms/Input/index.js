@@ -43,7 +43,7 @@ class Input extends Dom.Component {
       onChange,
       ...props
     } = this.props;
-    console.log('this.props', this.props);
+
     return (
       <div
         ref={this.wrapper}

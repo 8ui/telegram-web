@@ -6,12 +6,13 @@ import './styles.scss'
 
 class Field extends Dom.Component {
   render () {
-    const { ...props } = this.props;
+    const { children, ...props } = this.props;
+    console.log('children', this);
     return (
       <div
         className={`field ${props.size}`}
       >
-        <Input {...props} />
+        {children || <Input {...props} />}
       </div>
     )
   }

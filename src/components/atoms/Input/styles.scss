@@ -67,6 +67,9 @@ $size_xl: 74;
         &:focus {
           @include themed() {
             box-shadow: inset 0 0 0 2px t('systemBlue');
+            & + .addons {
+              color: t('systemBlue');
+            }
           }
         }
         &:hover {
@@ -77,12 +80,13 @@ $size_xl: 74;
         position: absolute;
         right: 0;
         top: 0;
-        bottom: 0;
+        bottom: 1px;
         display: flex;
         align-items: center;
         justify-content: center;
         pointer-events: none;
-        opacity: 0.6;
+        font-size: 24px;
+        color: #dadce0;
       }
     }
   }
@@ -112,16 +116,7 @@ $size_xl: 74;
         width: 118.75%;
       }
       span {
-        @include themed() {
-          border-bottom-color: t('systemGray2');
-          box-shadow: inset 0 -1px 0 t('systemGray2');
-        }
         input {
-          &::placeholder {
-            @include themed() {
-              color: t('secondaryLabel');
-            }
-          }
         }
       }
     }

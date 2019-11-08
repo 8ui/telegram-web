@@ -3,24 +3,13 @@ import Icon from '@atoms/Icon'
 import './styles.scss'
 
 
-class Checkbox extends Dom.Component {
-  render () {
-    const { ...props } = this.props;
-    return (
-      <div
-        className={`checkbox`}
-      >
-        <div className="checkbox__container">
-          <div className="checkbox__check">
-            <Icon name="checkboxon" />
-          </div>
-          <div className="checkbox__label">
-            Keep me signed in
-          </div>
-        </div>
-      </div>
-    )
-  }
+const Checkbox = ({ checked }) => (
+  <div className={`checkbox${checked ? ' checkbox--checked' : ''}`}>
+    <Icon name={`checkbox${checked ? 'on' : 'empty'}`} />
+  </div>
+)
+
+Checkbox.defaultProps = {
 }
 
 export default Checkbox;

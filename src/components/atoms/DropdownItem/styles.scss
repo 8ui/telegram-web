@@ -1,0 +1,30 @@
+.dropdown-item {
+  text-align: left;
+  display: flex;
+  height: 56px;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+
+  &:hover, &.active {
+    @include themed() {
+      background-color: t('secondarySystemBackground');
+    }
+  }
+
+  &__icon {
+    width: 55px;
+    text-align: center;
+  }
+  &__text {
+    flex: 1;
+    padding: 0 0 0 17px;
+  }
+  &__placeholder {
+    padding: 0 16px 2px 0;
+    @include themed() {
+      color: t('secondaryLabel');
+    }
+  }
+}
