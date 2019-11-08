@@ -14,7 +14,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'public'),
     filename: NODE_ENV === 'development' ? '[name].js' : '[name][hash:6].js',
-    // publicPath: path.join(__dirname, 'public'),
+    // publicPath: path.join(__dirname, 'src/images'),
   },
   devtool: NODE_ENV === 'development' ? 'source-map' : 'none',
   devServer: {
@@ -33,7 +33,7 @@ module.exports = {
       '@organisms': path.join(__dirname, '/src/components/organisms'),
       '@dom': path.join(__dirname, '/src/core/utils/dom'),
       '@core': path.join(__dirname, '/src/core'),
-      '@assets': path.join(__dirname, '/assets'),
+      '@images': path.join(__dirname, '/src/images'),
     }
   },
   resolveLoader: {
@@ -54,7 +54,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              // localIdentName: '[path][name]--[local]',
+              url: true,
             },
           }, {
             loader: 'postcss-loader',
@@ -103,7 +103,20 @@ module.exports = {
 	        loader: 'svg-url-loader',
 	        options: {}
 		    }
-			}
+			},
+      {
+        test: /\.(gif|png|jpe?g)$/i,
+        use: [
+          'file-loader',
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              // bypassOnDebug: true, // webpack@1.x
+              // disable: true, // webpack@2.x and newer
+            },
+          },
+        ],
+      }
     ]
   },
   plugins: [

@@ -8,9 +8,12 @@ const addEventListener = (el, name, fn) => {
 
 class Component {
   constructor(props) {
-    this.props = props || {};
+    console.log(props, this);
+    this.props = {...this.defaultProps, ...(props || {})};
   }
 }
+Component.defaultProps = {}
+
 
 const renderDom = (id, component) => {
   const d = new component()
@@ -32,7 +35,7 @@ const createElement = (tag, attrs, ...children) => {
   // if (attrs) console.log('attrs', attrs);
 
   if (typeof tag === 'function') {
-    const child = new tag(attrs);
+    const child = new tag({...tag.defaultProps, ...(attrs || {})});
     if (child instanceof Component) {
       return child.render();
     }
@@ -44,7 +47,7 @@ const createElement = (tag, attrs, ...children) => {
       Object.keys(attrs).forEach(attr => {
         if (typeof attrs[attr] === 'function') {
           addEventListener(el, attr, attrs[attr]);
-        } else {
+        } else if (attrs[attr] !== undefined) {
           setAttribute(el, attr, attrs[attr])
         }
       })

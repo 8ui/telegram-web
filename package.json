@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
-    "start": "webpack-dev-server .",
+    "start": "webpack-dev-server --https --key ./ssl/key.pem --cert ./ssl/cert.pem .",
     "watch": "webpack --watch",
     "sass": "sass --watch src/styles/index.scss:public/bundle.css",
     "watch:win": "./node_modules/.bin/webpack   --watch .",
@@ -57,6 +57,7 @@
     "file-loader": "^0.9.0",
     "fs": "0.0.1-security",
     "html-webpack-plugin": "^3.2.0",
+    "image-webpack-loader": "^6.0.0",
     "loader": "^2.1.1",
     "postcss": "^5.2.6",
     "postcss-flexbugs-fixes": "^4.1.0",

@@ -1,0 +1,36 @@
+.login {
+  align-self: flex-start;
+  margin-top: 108px;
+  text-align: center;
+  width: 360px;
+
+  &__logo {
+    display: flex;
+    justify-content: center;
+    &__image {
+      width: 160px;
+      height: 160px;
+        background-image: url(../../images/logo@1x.png);
+    }
+    @media
+      (-webkit-min-device-pixel-ratio: 2),
+      (min-resolution: 192dpi) {
+      &__image {
+        background-image: url(../../images/logo@2x.png);
+      }
+    }
+  }
+  &__header {
+    padding-bottom: 37px;
+    &__title {
+      margin: 44px 0 13px;
+    }
+    &__title {
+      font-size: #{$SIZE_LARGE_TITLE}px;
+      font-weight: 500;
+    }
+    &__subtitle {
+      line-height: 21px;
+    }
+  }
+}

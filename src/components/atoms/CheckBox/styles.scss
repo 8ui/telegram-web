@@ -1,0 +1,26 @@
+.checkbox {
+  display: flex;
+  align-items: center;
+  height: 53px;
+
+  &__container {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+  &__check {
+    width: 56px;
+    text-align: center;
+    @include themed() {
+      color: t('systemBlue');
+      font-size: 24px;
+    }
+    &--checked {
+
+    }
+  }
+  &__label {
+    margin: 0 0 3px 16px;
+  }
+}
