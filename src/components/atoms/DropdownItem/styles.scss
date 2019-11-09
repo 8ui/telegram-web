@@ -5,11 +5,10 @@
   flex-direction: row;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.25s ease;
 
   &:hover, &.active {
     @include themed() {
-      background-color: t('secondarySystemBackground');
+      background-color: #F1F1F3;
     }
   }
 

@@ -1,9 +1,23 @@
 const addEventListener = (el, name, fn) => {
-  el.addEventListener(
-    name.replace(/^on/, '').toLowerCase(),
-    fn,
-    false
-  );
+  const names = Array.isArray(name) ? name : name.split(' ')
+  names.forEach((n) => {
+    el.addEventListener(
+      n.replace(/^on/, '').toLowerCase(),
+      fn,
+      false
+    );
+  })
+}
+
+const removeEventListener = (el, name, fn) => {
+  const names = Array.isArray(name) ? name : name.split(' ')
+  names.forEach((n) => {
+    el.removeEventListener(
+      n.replace(/^on/, '').toLowerCase(),
+      fn,
+      false
+    );
+  })
 }
 
 class Component {
@@ -11,7 +25,7 @@ class Component {
     this.props = {...this.defaultProps, ...(props || {})};
   }
 
-  componentDidmount() { }
+  componentDidMount() { }
 
   componentWillmount() { }
 
@@ -21,7 +35,9 @@ class Component {
 
   componentWillUpdate() { }
 
-  componentDidUpdate() { }
+  componentDidUpdate() {
+    console.log('updated', this.name);
+  }
 
   draw = (update = false) => {
     const elem = this.render();
@@ -30,7 +46,7 @@ class Component {
     }
     this.elem = elem;
     this.componentWillmount()
-    setTimeout(this.componentDidmount.bind(this))
+    setTimeout(this.componentDidMount.bind(this))
     return this.elem;
   }
 
@@ -51,6 +67,7 @@ class Component {
   }
 
   setState = (data, fn) => {
+    console.log('setState', data, !!fn);
     const state = typeof data === 'function'
       ? data(this.state) : data
 
@@ -131,6 +148,8 @@ export {
   Fragment,
   Component,
   renderDom,
+  addEventListener,
+  removeEventListener,
 }
 
 class Dom {

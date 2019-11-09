@@ -10,7 +10,7 @@ class Dropdown extends Dom.Component {
 
   }
 
-  componentDidmount() {
+  componentDidMount() {
     document.body.addEventListener('mousedown', this.onHide);
   }
 

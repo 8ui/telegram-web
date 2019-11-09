@@ -7,7 +7,6 @@ import './styles.scss'
 class Field extends Dom.Component {
   render () {
     const { children, ...props } = this.props;
-    console.log('children', this);
     return (
       <div
         className={`field ${props.size}`}

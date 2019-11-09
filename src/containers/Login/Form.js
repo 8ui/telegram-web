@@ -15,7 +15,7 @@ class Form extends Dom.Component {
   }
 
   onChange = ({ target: { value } }, name) => {
-    this.setState({ [name]: value })
+    // this.setState({ [name]: value })
   }
 
   onCheckboxChange = () => {
@@ -26,7 +26,6 @@ class Form extends Dom.Component {
 
   render() {
     const { keepMeCheckbox, phone, country } = this.state;
-    console.log('phone', phone);
     return (
       <div className="login-form">
         <Field>

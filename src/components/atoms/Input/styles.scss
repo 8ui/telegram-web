@@ -6,6 +6,24 @@ $size_xl: 74;
 
 .input {
   width: 100%;
+  @keyframes caretPulse {
+    0% {
+      opacity: 1
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  &--caret-animated {
+    .input__caret {
+      animation-name: caretPulse;
+      animation-duration: 1s;
+      animation-iteration-count: infinite
+    }
+  }
   span {
     display: inline-table;
     position: relative;
@@ -42,6 +60,30 @@ $size_xl: 74;
       display: flex;
       user-select: none;
       position: relative;
+      .input__caret {
+        position: absolute;
+        top: 16px;
+        bottom: 16px;
+        left: -1px;
+        width: 2px;
+        border-radius: 2px;
+        pointer-events: none;
+        transform: translateX(47px);
+        display: none;
+
+        @include themed() {
+          background-color: t('systemBlue');
+        }
+        &-container {
+          position: absolute;
+          top: 100%;
+          opacity: 0;
+          pointer-events: none;
+          font-family: inherit;
+          padding: 0;
+          margin: 0;
+        }
+      }
       input {
         padding: 0 16px 1px;
         display: inline-flex;
@@ -51,8 +93,6 @@ $size_xl: 74;
         min-height: 100%;
         margin: 0;
         outline: none;
-        font: inherit;
-        font-weight: 400;
         line-height: inherit;
         background: none;
         border: none;
@@ -63,8 +103,22 @@ $size_xl: 74;
         transition-duration: 0.25s;
         transition-property: box-shadow, background-color;
         transition-timing-function: ease;
+        letter-spacing: 0;
+        font-family: inherit;
+
+        caret-color: transparent;
+
+        @include themed() {
+          &::selection {
+            background: rgba(t('systemBlue'), 0.3);
+          }
+          &::-moz-selection {
+            background: rgba(t('systemBlue'), 0.3);
+          }
+        }
 
         &:focus {
+          outline: none;
           @include themed() {
             box-shadow: inset 0 0 0 2px t('systemBlue');
             & + .addons {
@@ -86,7 +140,7 @@ $size_xl: 74;
         justify-content: center;
         pointer-events: none;
         font-size: 24px;
-        color: #dadce0;
+        color: #7B848B;
       }
     }
   }
