@@ -6,20 +6,28 @@ import './styles.scss'
 
 
 class Dropdown extends Dom.Component {
+  componentDidUpdate() {
+
+  }
+
   componentDidmount() {
-    document.body.addEventListener('mousedown', this.hide);
+    document.body.addEventListener('mousedown', this.onHide);
   }
 
   componentWillUnmount() {
-    document.body.removeEventListener('mousedown', this.hide);
+    document.body.removeEventListener('mousedown', this.onHide);
   }
 
-  hide = () => {
-    this.elem.classList.remove('dropdown--active')
+  onShow = () => {
+    this.elem.classList.add('dropdown--active')
+    this.elem.classList.remove('dropdown--hide');
   }
 
-  onToggle = () => {
-    this.elem.classList.toggle('dropdown--active')
+  onHide = () => {
+    if (this.elem.classList.contains('dropdown--active')) {
+      this.elem.classList.remove('dropdown--active');
+      this.elem.classList.add('dropdown--hide');
+    }
   }
 
   onDropdownClick = (e) => {
@@ -29,7 +37,7 @@ class Dropdown extends Dom.Component {
   onChange = (...props) => {
     const { onChange } = this.props;
     onChange(...props);
-    this.hide();
+    this.elem.classList.remove('dropdown--active');
   }
 
   renderTrigger = () => {
@@ -54,7 +62,7 @@ class Dropdown extends Dom.Component {
         className="dropdown"
         onMouseDown={this.onDropdownClick}
       >
-        <div onMouseDown={this.onToggle} className="dropdown-trigger">
+        <div onMouseDown={this.onShow} className="dropdown-trigger">
           {this.renderTrigger()}
         </div>
         <DropdownMenu {...props} onChange={this.onChange} />

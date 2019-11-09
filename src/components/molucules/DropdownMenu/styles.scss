@@ -7,11 +7,12 @@
   left: 0;
   z-index: 10;
   box-shadow: 0 5px 10px rgba(black, 0.3);
-  display: none;
+  // display: none;
+  opacity: 0;
+  animation-duration: 0.25s;
+  animation-fill-mode: forwards;
+  pointer-events: none;
 
-  &__active {
-    display: block;
-  }
   &__wrapper {
     padding: 9px 0;
     max-height: 376px;

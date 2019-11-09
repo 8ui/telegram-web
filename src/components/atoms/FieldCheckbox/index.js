@@ -7,7 +7,7 @@ import './styles.scss'
 class FieldCheckbox extends Dom.Component {
 
   render () {
-    const { onChange, ...props } = this.props;
+    const { onChange, label, ...props } = this.props;
     return (
       <div
         className="checkbox-field"
@@ -18,7 +18,7 @@ class FieldCheckbox extends Dom.Component {
             <Checkbox {...props} />
           </div>
           <div className="checkbox-field__label">
-            Keep me signed in
+            {label}
           </div>
         </div>
       </div>
