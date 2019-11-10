@@ -112,7 +112,6 @@ const createElement = (tag, attrs, ...children) => {
   }
 
   if (tag) {
-    // console.log(tag, children.flat());
     const el = document.createElement(tag);
     if (attrs && typeof attrs === 'object') {
       Object.keys(attrs).forEach(attr => {

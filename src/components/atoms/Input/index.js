@@ -3,16 +3,10 @@ import './styles.scss'
 
 
 class Input extends Dom.Component {
-  // constructor(props) {
-  //   super(props)
-  //
-  //   this.wrapper = React.createRef();
-  // }
-
   componentDidMount() {
     this.input = this.elem.getElementsByTagName('input')[0]
 
-    addEventListener(this.input, 'keydown keyup propertychange blur paste cut copy mousedown mouseup change', this.onCaretMove);
+    addEventListener(this.input, 'focus keydown keyup propertychange blur paste cut copy mousedown mouseup', this.onCaretMove);
   }
 
   componentDidUpdate() {
@@ -35,34 +29,46 @@ class Input extends Dom.Component {
     let offset = 0;
     let { value } = this.input;
 
+    const { selectionStart, selectionEnd } = this.input
+    let selection = selectionEnd;
+    const select = !!(selectionEnd - selectionStart)
     switch (e.type) {
-      case 'blur':
-        return caret.style.display = 'none';
-      case 'mousedown':
-        return caret.style.display = 'none';
-      case 'mouseup':
-        caret.style.display = 'block';
+      case 'blur': {
+        if (!this.input.value) this.elem.classList.remove('active');
+        return caret.style.display = 'none'
+      }
+      case 'mousedown': return caret.style.display = 'none';
+      case 'mouseup': caret.style.display = 'block'; break
       case 'keydown': {
+        if (select && !e.shiftKey) break;
         switch (e.keyCode) {
           case 8:
-          case 37:
-            offset -= 1;
-            break;
-          case 39:
-            offset += 1;
-            break;
+          case 37: offset -= 1; break;
+          case 39: offset += 1; break;
           default:
         }
 
         if (String(e.key).length === 1) {
           offset += 1;
           value += e.key;
+          if (!this.input.value) this.elem.classList.add('active');
         }
+      }
+      case 'keyup': {
+        if (this.input.value) this.elem.classList.add('active');
       }
       default:
     }
+
+    switch (this.input.selectionDirection) {
+      case 'forward': selection = selectionEnd; break;
+      case 'none':
+      case 'backward': selection = selectionStart; break;
+      default:
+    }
+
     const container = this.elem.getElementsByClassName('input__caret-container')[0];
-    container.innerHTML = value.substring(0, this.input.selectionEnd + offset).replace(/\n$/, '\n\u0001');
+    container.innerHTML = value.substring(0, selection + offset).replace(/\n$/, '\n\u0001');
     caret.style.transform = `translateX(${container.offsetWidth + 16}px)`;
     this.caretSetTimeoutAnimate();
   }
@@ -100,17 +106,16 @@ class Input extends Dom.Component {
 
     return (
       <div
-        ref={this.wrapper}
         className={`input ${size} ${value ? 'active' : ''}`}
         {...props}
       >
         <span>
-          {!!label && <label>{label}</label>}
+          {!!label && <label><div>{label}</div></label>}
           <span>
             <input
               {...input}
               value={value}
-              onChange={onChange}
+              onKeyUp={onChange}
               placeholder={placeholder}
               type="text"
               spellcheck="false"

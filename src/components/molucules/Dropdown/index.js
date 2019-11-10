@@ -6,6 +6,14 @@ import './styles.scss'
 
 
 class Dropdown extends Dom.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      search: null,
+    }
+  }
+
   componentDidUpdate() {
 
   }
@@ -40,22 +48,43 @@ class Dropdown extends Dom.Component {
     this.elem.classList.remove('dropdown--active');
   }
 
+  onSearch = ({ target: { value } }) => {
+    console.log(value);
+    this.setState({ search: value });
+  }
+
   renderTrigger = () => {
-    const { placeholder, children } = this.props;
+    const { search } = this.state;
+    const { label, children } = this.props;
     return (
       children || (
         <Input
           rightAddons={<Icon name="down" />}
-          placeholder={placeholder}
+          label={label}
+          onChange={this.onSearch}
+          value={search}
         />
       )
     )
   }
 
+  filterData = () => {
+    const search = (this.state.search || '').toLowerCase();
+    const { data } = this.props;
+    let r = data;
+
+    if (search) {
+      r = r.filter(n => n.text.toLowerCase().indexOf(search) > -1)
+    }
+    return r;
+  }
+
   render() {
     const {
-      children, placeholder, ...props
+      children, label, data, ...props
     } = this.props;
+
+    const items = this.filterData();
 
     return (
       <div
@@ -65,7 +94,7 @@ class Dropdown extends Dom.Component {
         <div onMouseDown={this.onShow} className="dropdown-trigger">
           {this.renderTrigger()}
         </div>
-        <DropdownMenu {...props} onChange={this.onChange} />
+        <DropdownMenu data={items} {...props} onChange={this.onChange} />
       </div>
     )
   }

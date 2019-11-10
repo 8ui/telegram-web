@@ -1,5 +1,6 @@
 import Dom from '@dom'
 import Field from '@atoms/Field'
+import Button from '@atoms/Button'
 import Dropdown from '@molucules/Dropdown'
 import FieldCheckbox from '@atoms/FieldCheckbox'
 
@@ -57,19 +58,22 @@ class Form extends Dom.Component {
             ]}
             value={country}
             onChange={console.log}
-            placeholder="Country"
+            label="Country"
           />
         </Field>
         <Field
           onChange={(e) => this.onChange(e, 'phone')}
           value={phone}
-          placeholder="Phone Number"
+          label="Phone Number"
         />
         <FieldCheckbox
           onChange={this.onCheckboxChange}
           checked={keepMeCheckbox}
           label="Keep me signed in"
         />
+        <Button>
+          next
+        </Button>
       </div>
     )
   }

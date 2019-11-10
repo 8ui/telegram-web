@@ -1,0 +1,20 @@
+.button {
+  text-transform: uppercase;
+  font-weight: 500;
+  color: white;
+  height: 54px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  @include themed() {
+    background-color: t('systemBlue');
+  }
+  &:hover {
+
+  }
+  &:active {
+
+  }
+}
