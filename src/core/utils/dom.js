@@ -25,7 +25,7 @@ const replaceWith = (elemPrev, elemNext) => {
   const next = Array.isArray(elemNext) ? elemNext : [elemNext];
 
   prev.forEach((item, i) => {
-    item.replaceWith(next[i]);
+    if (next[i]) item.replaceWith(next[i]);
   });
 }
 
