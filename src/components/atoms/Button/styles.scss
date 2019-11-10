@@ -8,13 +8,51 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.25s ease;
   @include themed() {
     background-color: t('systemBlue');
   }
-  &:hover {
 
+  &__text {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
   }
-  &:active {
 
+  @keyframes buttonActiveAnimate {
+    0% {
+      opacity: 0.5;
+      transform: scale(0);
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+
+  &:hover {
+    background-color: #3C84DD;
+  }
+  &__active {
+    pointer-events: none;
+    border-radius: 50%;
+    width: 0px;
+    height: 0px;
+    transform: scale(0);
+    top: 0;
+    left: 0;
+    opacity: 0;
+    display: block;
+    position: absolute;
+    background-color: rgba(black, 0.08);
+
+    animation-duration: 1.5s;
+    animation-iteration-count: 1
   }
 }
