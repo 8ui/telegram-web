@@ -7,7 +7,11 @@
   &__logo {
     display: flex;
     justify-content: center;
-    &__image {
+    height: 160px;
+    &-sticker {
+      margin: 9px 0 0 -2px !important;
+    }
+    &-image {
       width: 160px;
       height: 160px;
         background-image: url(../../images/logo@1x.png);
@@ -15,7 +19,7 @@
     @media
       (-webkit-min-device-pixel-ratio: 2),
       (min-resolution: 192dpi) {
-      &__image {
+      &-image {
         background-image: url(../../images/logo@2x.png);
       }
     }
@@ -23,7 +27,18 @@
   &__header {
     padding-bottom: 37px;
     &__title {
-      margin: 44px 0 13px;
+      margin: 41px 0 10px;
+      height: 44px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      span {
+        margin-left: 12px;
+      }
+      .button-icon {
+        margin-left: -1px;
+      }
     }
     &__title {
       font-size: #{$SIZE_LARGE_TITLE}px;

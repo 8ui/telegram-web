@@ -2,7 +2,7 @@ import Dom from '@dom'
 import './styles/index.scss'
 // import TdLibController from '@core/utils/td-controller'
 
-import Login from './containers/Login'
+import Login from './containers/Login/index-code'
 
 // const setPhoneNumber = phone => {
 //   TdLibController.send({

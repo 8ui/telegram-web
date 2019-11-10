@@ -91,11 +91,15 @@ const renderDom = (id, component) => {
 const setAttribute = (el, key, value) => {
   if (value === null) {
 
-  } else if (typeof value === 'object') {
+  } else if (typeof value === 'object' && key === 'style') {
     Object.keys(value).forEach(k => {
-      el[key][k] = value[k];
+      try {
+        el[key][k] = value[k];
+      } catch (e) {
+        console.log({ el, key, k, value });
+      }
     })
-  } else {
+  } else if (typeof value === 'string') {
     el.setAttribute(key === 'className' ? 'class' : key, value)
   }
 }

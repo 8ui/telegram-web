@@ -1,4 +1,5 @@
 import Dom from '@dom'
+import classNames from 'classnames';
 import './styles.scss'
 
 
@@ -22,10 +23,11 @@ class Button extends Dom.Component {
       loadingText,
       children,
       onClick,
+      className,
     } = this.props;
 
     return (
-      <a onMouseDown={this.onMouseDown} onClick={onClick} className="button">
+      <a onMouseDown={this.onMouseDown} onClick={onClick} className={classNames('button', className)}>
         <span className="button__text">{children}</span>
         <span className="button__hover"></span>
         <span className="button__active"></span>

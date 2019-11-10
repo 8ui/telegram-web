@@ -1,3 +1,22 @@
+import pako from 'pako';
+
+const parseStickerData = async(blob) => {
+  const r = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async e => {
+      try {
+        const result = pako.inflate(e.target.result, { to: 'string' });
+        resolve(JSON.parse(result));
+      } catch (err) {
+        reject({ key, error: true, msg: err.toString() });
+      }
+    };
+    reader.readAsArrayBuffer(blob);
+  })
+
+  return r;
+}
+
 function getOSName() {
   let OSName = 'Unknown';
   if (window.navigator.userAgent.indexOf('Windows NT 10.0') !== -1) OSName = 'Windows 10';
@@ -55,4 +74,5 @@ export {
   getBrowser,
   getOSName,
   stringToBoolean,
+  parseStickerData,
 };

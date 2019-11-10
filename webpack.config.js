@@ -82,7 +82,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.zip$/,
+        test: /\.(zip|tgs)$/i,
         use: 'file-loader'
       },
       {
