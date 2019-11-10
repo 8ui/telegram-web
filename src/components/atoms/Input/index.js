@@ -1,4 +1,4 @@
-import Dom, { addEventListener } from '@dom'
+import Dom, { addEventListener, removeEventListener } from '@dom'
 import classNames from 'classnames';
 import './styles.scss'
 
@@ -6,8 +6,19 @@ import './styles.scss'
 class Input extends Dom.Component {
   componentDidMount() {
     this.input = this.elem.getElementsByTagName('input')[0]
+    addEventListener(
+      this.input,
+      'focus keydown keyup propertychange blur paste cut copy mousedown mouseup',
+      this.onCaretMove
+    );
+  }
 
-    addEventListener(this.input, 'focus keydown keyup propertychange blur paste cut copy mousedown mouseup', this.onCaretMove);
+  componentWillUnmount() {
+    removeEventListener(
+      this.input,
+      'focus keydown keyup propertychange blur paste cut copy mousedown mouseup',
+      this.onCaretMove
+    );
   }
 
   componentDidUpdate() {
@@ -35,8 +46,12 @@ class Input extends Dom.Component {
     const select = !!(selectionEnd - selectionStart)
     switch (e.type) {
       case 'blur': {
-        if (!this.input.value) this.elem.classList.remove('input--active');
+        this.elem.classList.remove('input--active');
+        if (!value) this.elem.classList.remove('input--with-value');
         return caret.style.display = 'none'
+      }
+      case 'focus': {
+        this.elem.classList.add('input--active');
       }
       case 'mousedown': return caret.style.display = 'none';
       case 'mouseup': caret.style.display = 'block'; break
@@ -52,11 +67,11 @@ class Input extends Dom.Component {
         if (String(e.key).length === 1) {
           offset += 1;
           value += e.key;
-          if (!this.input.value) this.elem.classList.add('input--active');
+          if (!value) this.elem.classList.add('input--with-value');
         }
       }
       case 'keyup': {
-        if (this.input.value) this.elem.classList.add('input--active');
+        if (value) this.elem.classList.add('input--with-value');
       }
       default:
     }
@@ -83,7 +98,6 @@ class Input extends Dom.Component {
 
   renderLabel = () => {
     const { label, error, errorLabel } = this.props;
-    console.log(!!label && !error && <label><div>{label}</div></label>);
     return [
       !!label && !error && <label><div>{label}</div></label>,
       error && !!errorLabel && <label><div>{errorLabel}</div></label>,

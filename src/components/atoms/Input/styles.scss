@@ -1,4 +1,4 @@
-$scale: 0.76;
+$scale: 0.75;
 $size_s: 44;
 $size_m: 54;
 $size_l: 64;
@@ -16,6 +16,15 @@ $size_xl: 74;
 
 .input {
   width: 100%;
+  font-size: 16px;
+  .input-field {
+    height: #{$size_m}px;
+    font-size: 16px;
+  }
+  .addons {
+    min-width: #{$size_m}px;
+  }
+
   @keyframes caretPulse {
     0% {
       opacity: 1
@@ -51,6 +60,7 @@ $size_xl: 74;
       text-overflow: ellipsis;
       white-space: nowrap;
       z-index: 1;
+      color: #C0C6CB;
 
       transform: scale(1) translateY(0);
       transform-origin: 4px 100%;
@@ -60,9 +70,9 @@ $size_xl: 74;
 
       div {
         display: inline-block;
-        padding: 0 6px 0 5px;
+        padding: 5px 6px 6px 5px;
+        border-radius: 15px;
         @include themed() {
-          color: #C0C6CB;
           background-color: t('systemBackground');
         }
       }
@@ -174,35 +184,26 @@ $size_xl: 74;
       padding-right: 54px;
     }
   }
+  &--with-value {
+    span {
+      label {
+        transform: scale($scale) translateY(-42px) !important;
+        color: #535353;
+      }
+    }
+    &.input--active {
+      label {
+        font-weight: 500;
+        @include themed() {
+          color: t('systemBlue');
+        }
+      }
+    }
+  }
   &--active {
-    &.s {
-      label {
-        transform: scale($scale) translateY(-#{$scale * $size_s}px);
-      }
-    }
-    &.m {
-      label {
-        transform: scale($scale) translateY(-#{$scale * $size_m}px);
-      }
-    }
-    &.l {
-      label {
-        transform: scale($scale) translateY(-#{$scale * $size_l}px);
-      }
-    }
-    &.xl {
-      label {
-        transform: scale($scale) translateY(-#{$scale * $size_xl}px);
-      }
-    }
     span {
       label {
         width: 118.75%;
-        div {
-          @include themed() {
-            color: t('systemBlue');
-          }
-        }
       }
       span {
         .input-field {
@@ -226,46 +227,6 @@ $size_xl: 74;
           box-shadow: inset 0 0 0 2px t('systemRed') !important;
         }
       }
-    }
-  }
-  &.s {
-    font-size: 14px;
-    .input-field {
-      height: #{$size_s}px;
-      font-size: 14px;
-    }
-    .addons {
-      min-width: #{$size_s}px;
-    }
-  }
-  &.m {
-    font-size: 16px;
-    .input-field {
-      height: #{$size_m}px;
-      font-size: 16px;
-    }
-    .addons {
-      min-width: #{$size_m}px;
-    }
-  }
-  &.l {
-    font-size: 18px;
-    .input-field {
-      height: #{$size_l}px;
-      font-size: 18px;
-    }
-    .addons {
-      min-width: #{$size_l}px;
-    }
-  }
-  &.xl {
-    font-size: 20px;
-    .input-field {
-      height: #{$size_xl}px;
-      font-size: 20px;
-    }
-    .addons {
-      min-width: #{$size_xl}px;
     }
   }
 }

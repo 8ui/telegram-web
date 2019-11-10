@@ -17,9 +17,9 @@ class Message extends Dom.Component {
     return (
       <div className="message-bubble">
         <div className="message-audio">
-          <a className="message-audio__play">
+          <div className="message-audio__play">
             <Icon name="play" />
-          </a>
+          </div>
           <div>
             <div className="message-audio__timeline"></div>
             <div className="message-audio__duration">3:24</div>

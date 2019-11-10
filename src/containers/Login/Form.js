@@ -71,9 +71,6 @@ class Form extends Dom.Component {
           checked={keepMeCheckbox}
           label="Keep me signed in"
         />
-        <Button>
-          next
-        </Button>
       </div>
     )
   }

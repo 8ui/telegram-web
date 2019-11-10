@@ -9,6 +9,10 @@ class Login extends Dom.Component {
       <div className="login">
         <Header />
         <Form />
+
+        <Button>
+          next
+        </Button>
       </div>
     )
   }
