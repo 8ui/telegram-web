@@ -1,5 +1,5 @@
 .button-icon {
-  display: inline-flex;
+  display: flex;
   width: 44px;
   height: 44px;
   flex-basis: 44px;
@@ -8,6 +8,8 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.4s ease;
+  overflow: hidden;
+  position: relative;
 
   > .icon {
     font-size: 24px;
@@ -17,6 +19,89 @@
   &:hover {
     @include themed() {
       background: t('secondarySystemBackground');
+    }
+  }
+
+  @keyframes anim-in {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+
+  @keyframes anim-in-pseudo {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes anim-out {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+
+  @keyframes anim-out-pseudo {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  input[type="checkbox"] {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    left: 0;
+    top: 0;
+    cursor: pointer;
+
+    &:focus {
+      outline: 0; // Get rid of Chrome's ugly outline on focus
+    }
+    &:checked + .button-icon__active {
+      animation-name: anim-in;
+      animation-duration: 0.5s;
+
+      &:after {
+        animation-name: anim-in-pseudo;
+        animation-duration: 0.4s;
+        animation-delay: 0.5s;
+      }
+    }
+    &:not(:checked) + .button-icon__active {
+      animation-name: anim-out;
+      animation-duration: 0.5s;
+
+      &:after {
+        animation-name: anim-out-pseudo;
+        animation-duration: 0.4s;
+        animation-delay: 0.5s;
+      }
+    }
+  }
+
+  &__active {
+    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    animation-fill-mode: forwards;
+
+    &:before {
+      position: relative;
+      content: '';
+      display: block;
+      margin-top: 100%;
+    }
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom:0;
+      left: 0;
+      right: 0;
+      border-radius: 50%;
+      background: rgba(black,0.08);
+      animation-fill-mode: forwards;
     }
   }
 }

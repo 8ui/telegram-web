@@ -6,9 +6,11 @@ class ButtonIcon extends Dom.Component {
   render() {
     const { name, onClick } = this.props;
     return (
-      <a onClick={onClick} className="button-icon">
+      <div onClick={onClick} className="button-icon">
+        <input type="checkbox" />
+        <div className="button-icon__active"></div>
         <i className={`icon icon-${name}`}></i>
-      </a>
+      </div>
     )
   }
 }

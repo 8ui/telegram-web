@@ -12,7 +12,6 @@ class ButtonIcon extends Dom.Component {
     return (
       <div {...props} className={`avatar${online ? ' avatar--online' : ''}`}>
         <i className={`icon icon-avatar_savedmessages`}></i>
-
       </div>
     )
   }

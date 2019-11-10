@@ -79,9 +79,17 @@ class Login extends Dom.Component {
         <div className="login-form">
           <Field
             value=""
+            error={true}
+            errorLabel="Invalid Code"
             label="Code"
+            rightAddons={[
+              <ButtonIcon name="eye1" />,
+            ]}
           />
         </div>
+        <Button>
+          next
+        </Button>
       </div>
     )
   }

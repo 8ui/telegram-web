@@ -29,7 +29,6 @@ class Button extends Dom.Component {
     return (
       <a onMouseDown={this.onMouseDown} onClick={onClick} className={classNames('button', className)}>
         <span className="button__text">{children}</span>
-        <span className="button__hover"></span>
         <span className="button__active"></span>
       </a>
     )

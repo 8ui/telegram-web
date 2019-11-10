@@ -1,4 +1,5 @@
 import Dom, { addEventListener } from '@dom'
+import classNames from 'classnames';
 import './styles.scss'
 
 
@@ -34,7 +35,7 @@ class Input extends Dom.Component {
     const select = !!(selectionEnd - selectionStart)
     switch (e.type) {
       case 'blur': {
-        if (!this.input.value) this.elem.classList.remove('active');
+        if (!this.input.value) this.elem.classList.remove('input--active');
         return caret.style.display = 'none'
       }
       case 'mousedown': return caret.style.display = 'none';
@@ -51,11 +52,11 @@ class Input extends Dom.Component {
         if (String(e.key).length === 1) {
           offset += 1;
           value += e.key;
-          if (!this.input.value) this.elem.classList.add('active');
+          if (!this.input.value) this.elem.classList.add('input--active');
         }
       }
       case 'keyup': {
-        if (this.input.value) this.elem.classList.add('active');
+        if (this.input.value) this.elem.classList.add('input--active');
       }
       default:
     }
@@ -67,7 +68,7 @@ class Input extends Dom.Component {
       default:
     }
 
-    const container = this.elem.getElementsByClassName('input__caret-container')[0];
+    const container = this.elem.getElementsByClassName('input__caret-container')[0].children[0];
     container.innerHTML = value.substring(0, selection + offset).replace(/\n$/, '\n\u0001');
     caret.style.transform = `translateX(${container.offsetWidth + 16}px)`;
     this.caretSetTimeoutAnimate();
@@ -76,8 +77,17 @@ class Input extends Dom.Component {
   renderCaret = () => {
     return ([
       <div className="input__caret" />,
-      <pre className="input__caret-container" />
+      <div className="input__caret-container"><pre></pre></div>,
     ])
+  }
+
+  renderLabel = () => {
+    const { label, error, errorLabel } = this.props;
+    console.log(!!label && !error && <label><div>{label}</div></label>);
+    return [
+      !!label && !error && <label><div>{label}</div></label>,
+      error && !!errorLabel && <label><div>{errorLabel}</div></label>,
+    ]
   }
 
   renderRight = () => {
@@ -93,7 +103,6 @@ class Input extends Dom.Component {
 
   render () {
     const {
-      error,
       label,
       size,
       placeholder,
@@ -101,19 +110,27 @@ class Input extends Dom.Component {
       rightAddons,
       value,
       onChange,
+      error,
+      errorLabel,
       ...props
     } = this.props;
 
     return (
       <div
-        className={`input ${size} ${value ? 'active' : ''}`}
+        className={classNames(
+          'input', size,
+          { 'input--error': error },
+          { 'input--active': !!value },
+          { 'input--with-addons': !!rightAddons },
+        )}
         {...props}
       >
         <span>
-          {!!label && <label><div>{label}</div></label>}
+          {this.renderLabel()}
           <span>
             <input
               {...input}
+              className="input-field"
               value={value}
               onKeyUp={onChange}
               placeholder={placeholder}
