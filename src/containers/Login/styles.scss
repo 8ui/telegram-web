@@ -7,7 +7,7 @@
   &__logo {
     display: flex;
     justify-content: center;
-    height: 160px;
+    height: 170px;
     &-sticker {
       margin: 9px 0 0 -2px !important;
     }
@@ -23,11 +23,14 @@
         background-image: url(../../images/logo@2x.png);
       }
     }
+    .avatar-picker {
+      align-self: flex-end;
+    }
   }
   &__header {
     padding-bottom: 37px;
     &__title {
-      margin: 41px 0 10px;
+      margin: 31px 0 10px;
       height: 44px;
       display: flex;
       flex-direction: row;
@@ -48,7 +51,10 @@
       line-height: 21px;
     }
   }
+  &-form {
+    margin-bottom: 12px;
+  }
   .checkbox-field {
-    margin-bottom: 27px;
+    margin-bottom: 15px;
   }
 }
