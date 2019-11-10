@@ -1,9 +1,28 @@
 import Dom from '@dom'
 import classNames from 'classnames'
 import Icon from '@atoms/Icon'
+import Modal from '@atoms/Modal'
+import ImageCrop from '@molucules/ImageCrop'
 import './styles.scss'
 
 class AvatarPicker extends Dom.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      modal: false,
+    }
+  }
+
+  onOpen = () => this.setState({ modal: true })
+
+  onClose = () => this.setState({ modal: false })
+
+  onSuccess = () => {
+    console.log('success');
+    this.onClose();
+  }
+
   renderImage = () => {
     return (
       <div className="avatar-picker__image">
@@ -13,20 +32,28 @@ class AvatarPicker extends Dom.Component {
   }
 
   render() {
+    const { modal } = this.state;
     const {
       className,
       onChange,
       onLoad,
     } = this.props;
 
-    return (
+    return [
       <div className="avatar-picker">
         {this.renderImage()}
-        <div className="avatar-picker__picker">
+        <div onClick={this.onOpen} className="avatar-picker__picker">
           <Icon name="cameraadd" />
         </div>
-      </div>
-    )
+      </div>,
+      <Modal
+        visible={modal}
+        onClose={this.onClose}
+        onSuccess={this.onSuccess}
+      >
+        <ImageCrop />
+      </Modal>
+    ]
   }
 }
 

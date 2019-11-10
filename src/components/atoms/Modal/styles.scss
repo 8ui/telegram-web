@@ -1,0 +1,57 @@
+.modal-overlay {
+  background-color: rgba(black, 0.25);
+  z-index: 12;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: none;
+  padding-bottom: 78px;
+  text-align: left;
+
+  &--visible {
+    display: flex;
+  }
+
+  .modal {
+    border-radius: 10px;
+    min-width: 500px;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    @include themed() {
+      background-color: t('systemBackground');
+    }
+
+    &__header {
+      height: 70px;
+      display: flex;
+      flex-direction: row;
+      padding: 8px 14px;
+
+      &-title {
+        font-weight: 500;
+        font-size: 20px;
+        display: block;
+        padding: 10.5px 0 0 22px;
+      }
+    }
+    &__body {
+      flex: 1;
+      padding: 0 70px;
+    }
+    &__footer {
+      height: 50px;
+      position: relative;
+      >.button-icon {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+  }
+}

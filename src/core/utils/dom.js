@@ -20,6 +20,15 @@ const removeEventListener = (el, name, fn) => {
   })
 }
 
+const replaceWith = (elemPrev, elemNext) => {
+  const prev = Array.isArray(elemPrev) ? elemPrev : [elemPrev];
+  const next = Array.isArray(elemNext) ? elemNext : [elemNext];
+
+  prev.forEach((item, i) => {
+    item.replaceWith(next[i]);
+  });
+}
+
 class Component {
   constructor(props) {
     this.props = {...this.defaultProps, ...(props || {})};
@@ -41,13 +50,18 @@ class Component {
 
   draw = (update = false) => {
     const elem = this.render();
-    if (this.elem) {
-      this.elem.replaceWith(elem);
+    try {
+      if (this.elem) {
+        replaceWith(this.elem, elem);
+      }
+      this.elem = elem;
+      this.componentWillmount()
+      setTimeout(this.componentDidMount.bind(this))
+      return this.elem;
+    } catch (e) {
+      console.log(e, this.elem, elem);
+      return this.elem;
     }
-    this.elem = elem;
-    this.componentWillmount()
-    setTimeout(this.componentDidMount.bind(this))
-    return this.elem;
   }
 
   redraw = (nextProps, nextState) => {
@@ -115,31 +129,37 @@ const createElement = (tag, attrs, ...children) => {
     }
   }
 
-  if (tag) {
-    const el = document.createElement(tag);
-    if (attrs && typeof attrs === 'object') {
-      Object.keys(attrs).forEach(attr => {
-        if (typeof attrs[attr] === 'function') {
-          addEventListener(el, attr, attrs[attr]);
-        } else if (attrs[attr] !== undefined) {
-          setAttribute(el, attr, attrs[attr])
+  try {
+    if (tag) {
+      const el = document.createElement(tag);
+      if (attrs && typeof attrs === 'object') {
+        Object.keys(attrs).forEach(attr => {
+          if (typeof attrs[attr] === 'function') {
+            addEventListener(el, attr, attrs[attr]);
+          } else if (attrs[attr] !== undefined) {
+            setAttribute(el, attr, attrs[attr])
+          }
+        })
+      }
+
+      children.flat().forEach(item => {
+        if (['string', 'number'].includes(typeof item)) {
+          el.innerHTML += item;
+        } else if (item) {
+          try {
+            el.appendChild(item)
+          } catch (e) {
+            console.log(item, e);
+          }
         }
       })
+      return el
     }
-
-    children.flat().forEach(item => {
-      if (['string', 'number'].includes(typeof item)) {
-        el.innerHTML += item;
-      } else if (item) {
-        try {
-          el.appendChild(item)
-        } catch (e) {
-          console.log(item, e);
-        }
-      }
-    })
-    return el
+  } catch (e) {
+    console.log(e, tag);
   }
+
+  return undefined;
 }
 
 const Fragment = () => {

@@ -1,0 +1,45 @@
+.image-crop {
+  width: 360px;
+  height: 360px;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  display: flex;
+
+  &__container {
+    flex: 1;
+    background-image: url(../../../images/temp/dog@1x.jpg);
+    background-position: 50% 50%;
+
+    &-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(white, 0.8);
+    }
+  }
+  &__circular {
+    width: 320px;
+    height: 320px;
+    cursor: move;
+    top: 50%;
+    left: 50%;
+    margin: -160px 0 0 -160px;
+    background-position: 50% 50%;
+    position: absolute;
+    background-image: url(../../../images/temp/dog@1x.jpg);
+    border-radius: 50%;
+  }
+
+  @media
+    (-webkit-min-device-pixel-ratio: 2),
+    (min-resolution: 192dpi) {
+    &__container,
+    &__circular {
+      background-image: url(../../../images/temp/dog@2x.jpg);
+    }
+  }
+}

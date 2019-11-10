@@ -3,22 +3,43 @@
   width: 44px;
   height: 44px;
   flex-basis: 44px;
-  border-radius: 22px;
+  border-radius: 50%;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.4s ease;
   overflow: hidden;
   position: relative;
 
   > .icon {
     font-size: 24px;
     color: rgb(95, 100, 104);
+    position: relative;
+    z-index: 2;
   }
 
-  &:hover {
+  &--primary {
+    box-shadow: 0 2px 2px rgba(black, 0.15);
     @include themed() {
-      background: t('secondarySystemBackground');
+      background: t('systemBlue');
+    }
+    > .icon {
+      color: white;
+    }
+  }
+
+  &__hover {
+    opacity: 0;
+    background-color: rgba(black, 0.08);
+    transition: opacity 0.25s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  &:hover {
+    .button-icon__hover {
+      opacity: 1;
     }
   }
 
@@ -52,6 +73,7 @@
     left: 0;
     top: 0;
     cursor: pointer;
+    z-index: 3;
 
     &:focus {
       outline: 0; // Get rid of Chrome's ugly outline on focus
@@ -83,8 +105,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    z-index: -1;
     animation-fill-mode: forwards;
+    z-index: 1;
 
     &:before {
       position: relative;
@@ -103,5 +125,11 @@
       background: rgba(black,0.08);
       animation-fill-mode: forwards;
     }
+  }
+
+  &--l {
+    width: 54px;
+    height: 54px;
+    flex-basis: 54px;
   }
 }

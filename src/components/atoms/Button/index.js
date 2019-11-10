@@ -18,7 +18,6 @@ class Button extends Dom.Component {
 
   render() {
     const {
-      icon,
       loading,
       loadingText,
       children,
@@ -27,7 +26,11 @@ class Button extends Dom.Component {
     } = this.props;
 
     return (
-      <div onMouseDown={this.onMouseDown} onClick={onClick} className={classNames('button', className)}>
+      <div
+        onMouseDown={this.onMouseDown}
+        onClick={onClick}
+        className={classNames('button', className)}
+      >
         <span className="button__text">{children}</span>
         <span className="button__active"></span>
       </div>
