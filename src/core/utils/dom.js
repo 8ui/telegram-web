@@ -1,3 +1,7 @@
+import { flat } from './common'
+
+const dom = {};
+
 const addEventListener = (el, name, fn) => {
   const names = Array.isArray(name) ? name : name.split(' ')
   names.forEach((n) => {
@@ -119,6 +123,22 @@ const setAttribute = (el, key, value) => {
 }
 
 const createElement = (tag, attrs, ...children) => {
+  if (attrs && attrs.key) {
+    console.log('createElement', attrs);
+    let item = dom[attrs.key]
+    if (!item) {
+      item = {
+        el: null,
+      }
+      const { key, ...attr } = attrs
+      item.el = createElement(tag, attr, ...children);
+      console.log('item', item);
+      dom[key] = item;
+      console.log('dom', dom);
+    }
+    return item.el;
+  }
+
   if (typeof tag === 'function') {
     const props = {...(tag.defaultProps || {}), ...(attrs || {}), children: (children.length ? children : undefined)}
     if (tag.prototype instanceof Component) {
@@ -137,12 +157,12 @@ const createElement = (tag, attrs, ...children) => {
           if (typeof attrs[attr] === 'function') {
             addEventListener(el, attr, attrs[attr]);
           } else if (attrs[attr] !== undefined) {
-            setAttribute(el, attr, attrs[attr])
+            setAttribute(el, attr, attrs[attr]);
           }
         })
       }
 
-      children.flat().forEach(item => {
+      flat(children).forEach(item => {
         if (['string', 'number'].includes(typeof item)) {
           el.innerHTML += item;
         } else if (item) {

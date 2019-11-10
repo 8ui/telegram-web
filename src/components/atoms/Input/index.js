@@ -134,7 +134,7 @@ class Input extends Dom.Component {
         className={classNames(
           'input', size,
           { 'input--error': error },
-          { 'input--active': !!value },
+          { 'input--with-value': !!value },
           { 'input--with-addons': !!rightAddons },
         )}
         {...props}

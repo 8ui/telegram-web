@@ -5,15 +5,19 @@ import './styles.scss'
 
 class Button extends Dom.Component {
   onMouseDown = (e) => {
-    const Bubble = this.elem.getElementsByClassName('button__active')[0];
-    const width = Math.max(e.layerX, this.elem.offsetWidth - e.layerX) * 2;
-    Bubble.style.animationName = '';
-    void Bubble.offsetWidth;
-    Bubble.style.animationName = 'buttonActiveAnimate';
-    Bubble.style.left = `${e.layerX - width / 2}px`
-    Bubble.style.top = `${e.layerY - width/ 2}px`
-    Bubble.style.width = `${width}px`
-    Bubble.style.height = `${width}px`
+    try {
+      const Bubble = this.elem.getElementsByClassName('button__active')[0];
+      const width = Math.max(e.layerX, this.elem.offsetWidth - e.layerX) * 2;
+      Bubble.style.animationName = '';
+      void Bubble.offsetWidth;
+      Bubble.style.animationName = 'buttonActiveAnimate';
+      Bubble.style.left = `${e.layerX - width / 2}px`
+      Bubble.style.top = `${e.layerY - width/ 2}px`
+      Bubble.style.width = `${width}px`
+      Bubble.style.height = `${width}px`
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   render() {

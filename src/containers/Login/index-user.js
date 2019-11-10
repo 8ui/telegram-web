@@ -46,6 +46,7 @@ class Login extends Dom.Component {
             label="Last Name (optional)"
           />
         </div>
+
         <Button>
           start messaging
         </Button>

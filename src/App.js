@@ -3,8 +3,8 @@ import './styles/index.scss'
 // import TdLibController from '@core/utils/td-controller'
 
 // import Login from './containers/Login/index'
-// import Login from './containers/Login/index-code'
-import Login from './containers/Login/index-user'
+import Login from './containers/Login/index-code'
+// import Login from './containers/Login/index-user'
 
 // const setPhoneNumber = phone => {
 //   TdLibController.send({

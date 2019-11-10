@@ -16,6 +16,7 @@ class Login extends Dom.Component {
     this.stickers = ['Close','CloseAndPeek','CloseAndPeekToIdle','Idle','Peek','Tracking'];
     this.state = {
       stickers: [],
+      code: null,
     }
 
     // this.stickers.forEach(n => this.loadData(n))
@@ -78,10 +79,12 @@ class Login extends Dom.Component {
         />
         <div className="login-form">
           <Field
-            value=""
+            value={this.state.code}
             error={true}
             errorLabel="Invalid Code"
             label="Code"
+            key="form-user-code"
+            onChange={(e) => this.setState({ code: e.target.value })}
             rightAddons={[
               <ButtonIcon name="eye1" />,
             ]}
@@ -90,6 +93,7 @@ class Login extends Dom.Component {
         <Button>
           next
         </Button>
+        {/* {stickers.map(n => <Sticker height={168} width={168} loop={true} animationData={n} />)} */}
       </div>
     )
   }

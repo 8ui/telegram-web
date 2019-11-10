@@ -189,11 +189,11 @@ $size_xl: 74;
       label {
         transform: scale($scale) translateY(-42px) !important;
         color: #535353;
+        font-weight: 500;
       }
     }
     &.input--active {
       label {
-        font-weight: 500;
         @include themed() {
           color: t('systemBlue');
         }
@@ -225,6 +225,12 @@ $size_xl: 74;
         }
         .input-field {
           box-shadow: inset 0 0 0 2px t('systemRed') !important;
+          &::selection {
+            background: rgba(t('systemRed'), 0.3);
+          }
+          &::-moz-selection {
+            background: rgba(t('systemRed'), 0.3);
+          }
         }
       }
     }

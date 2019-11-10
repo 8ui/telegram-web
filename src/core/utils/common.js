@@ -17,6 +17,8 @@ const parseStickerData = async(blob) => {
   return r;
 }
 
+const flat = arr => [].concat(...arr);
+
 function getOSName() {
   let OSName = 'Unknown';
   if (window.navigator.userAgent.indexOf('Windows NT 10.0') !== -1) OSName = 'Windows 10';
@@ -75,4 +77,5 @@ export {
   getOSName,
   stringToBoolean,
   parseStickerData,
+  flat,
 };
