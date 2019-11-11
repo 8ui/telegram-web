@@ -1,11 +1,13 @@
 import { APP_ID, APP_HASH } from '@core/constants';
-import MTProto from 'telegram-mtproto'
-import * as localforage from 'localforage'
-import BrowserStorage from 'mtproto-storage-browser'
+import './dist/vendor.dll'
+import MTProto from './dist/mtproto2-browser'
+// import MTProto from 'telegram-mtproto'
+// import * as localforage from 'localforage'
+// import BrowserStorage from 'mtproto-storage-browser'
 
-export const storage = localforage.createInstance({
-  driver: localforage.LOCALSTORAGE,
-})
+// export const storage = localforage.createInstance({
+//   driver: localforage.LOCALSTORAGE,
+// })
 
 const api = {
   invokeWithLayer: 0xda9b0d0d,
@@ -19,13 +21,13 @@ const api = {
 const server = {
   webogram: true,
   // webogram: window && window.location && window.location.protocol === 'https:',
-  dev: true
+  dev: false
 }
 
-const app = {
-  debug: false,
-  storage: new BrowserStorage(storage),
-}
+// const app = {
+//   debug: false,
+//   storage: new BrowserStorage(storage),
+// }
 
 const telegram = MTProto({
   server,

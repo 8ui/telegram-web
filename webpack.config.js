@@ -48,6 +48,16 @@ module.exports = {
         include: [path.resolve(__dirname, 'src')]
       },
       {
+        test: /\.tg(json|s)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            name: './stickers/[name].[ext]',
+            limit: 0
+          }
+        }
+      },
+      {
         test: /\.scss$/,
         use: [
           'style-loader',
@@ -147,7 +157,7 @@ module.exports = {
       NODE_ENV: JSON.stringify(NODE_ENV)
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, '/public/index.html'),
+      template: path.join(__dirname, '/src/public/index.html'),
       filename: 'index.html'
     }),
     new webpack.HotModuleReplacementPlugin(),

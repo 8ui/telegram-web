@@ -55,5 +55,5 @@ jspm_packages
 target
 
 tmp
-public/
 src/files/
+/public

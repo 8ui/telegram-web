@@ -2,6 +2,9 @@ const path = require('path')
 const NODE_ENV = process.env.NODE_ENV || 'development'
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const autoprefixer = require('autoprefixer')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -17,7 +20,7 @@ module.exports = {
   entry: {
     bundle: path.join(__dirname, '/src/index.js'),
     // Set up an ES6-ish environment
-    babel_polyfill: '@babel/polyfill',
+    // babel_polyfill: '@babel/polyfill',
   },
   output: {
     path: path.join(__dirname, 'public'),
@@ -27,6 +30,25 @@ module.exports = {
   watch: NODE_ENV === 'development',
   watchOptions: {
     aggregateTimeout: 300
+  },
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        test: /\.js(\?.*)?$/i,
+      }),
+    ],
+    runtimeChunk: false,
+    splitChunks: {
+      cacheGroups: {
+        default: false,
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor_app',
+          chunks: 'all',
+          minChunks: 2
+        }
+      }
+    }
   },
   resolve: {
     extensions: ['*', '.js', '.styl', '.pub'],
@@ -46,12 +68,17 @@ module.exports = {
     rules: [
       // babel
       {
-        test: /\.(js)?$/,
-        loaders: ['babel-loader'],
-        include: [path.resolve(__dirname, 'src')]
+        test: /\.m?js$/,
+        // exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
       },
       {
-        test: /\.scss$/,
+        test: /\.(css|sass|scss)$/,
         use: [
           'style-loader',
           {
@@ -63,7 +90,7 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               plugins: () => [
-                // require('autoprefixer'),
+                require('autoprefixer'),
               ],
             },
           }, {
@@ -141,13 +168,14 @@ module.exports = {
         ]
       }
     }),
-    new ExtractTextPlugin(extractTextPluginOptions),
+    // new ExtractTextPlugin(extractTextPluginOptions),
     new webpack.DefinePlugin({
       NODE_ENV: JSON.stringify(NODE_ENV)
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, '/src/views/index.html'),
-      filename: 'index.html'
+      template: path.join(__dirname, '/src/public/index.html'),
+      filename: 'index.html',
+      minify: true,
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
@@ -159,6 +187,7 @@ module.exports = {
           })
         ]
       }
-    })
+    }),
+    new BundleAnalyzerPlugin(),
   ]
 }
