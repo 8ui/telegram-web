@@ -1,5 +1,4 @@
 const path = require('path')
-const IconfontWebpackPlugin = require('iconfont-webpack-plugin')
 const NODE_ENV = process.env.NODE_ENV || 'development'
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -19,7 +18,6 @@ module.exports = {
     bundle: path.join(__dirname, '/src/index.js'),
     // Set up an ES6-ish environment
     babel_polyfill: '@babel/polyfill',
-    vendor: ['jquery']
   },
   output: {
     path: path.join(__dirname, 'public'),
@@ -31,7 +29,15 @@ module.exports = {
     aggregateTimeout: 300
   },
   resolve: {
-    extensions: ['*', '.js', '.styl', '.pub']
+    extensions: ['*', '.js', '.styl', '.pub'],
+    alias: {
+      '@atoms': path.join(__dirname, '/src/components/atoms'),
+      '@molucules': path.join(__dirname, '/src/components/molucules'),
+      '@organisms': path.join(__dirname, '/src/components/organisms'),
+      '@dom': path.join(__dirname, '/src/core/utils/dom'),
+      '@core': path.join(__dirname, '/src/core'),
+      '@images': path.join(__dirname, '/src/images'),
+    }
   },
   resolveLoader: {
     modules: [path.join(__dirname, 'node_modules')]
@@ -45,55 +51,74 @@ module.exports = {
         include: [path.resolve(__dirname, 'src')]
       },
       {
-        test: /\.(css|scss)$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: true
-              }
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              url: true,
             },
-            {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: true
-              }
+          }, {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [
+                // require('autoprefixer'),
+              ],
             },
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: loader => [new IconfontWebpackPlugin(loader)]
-              }
+          }, {
+            loader: 'sass-loader',
+            options: {
+              // includePaths: [].concat(project.paths.assets()),
+            },
+          },
+          { loader: 'sass-resources-loader',
+            options: {
+              sourceMap: true,
+              resources: [
+                './src/styles/variables.scss',
+                './src/styles/color-mixins.scss',
+                // './src/styles/typografy.scss',
+              ]
             }
-          ]
-        })
+          },
+        ],
       },
       {
-        test: /\.pug$/,
+        test: /\.(zip|tgs)$/i,
+        use: 'file-loader'
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
         use: [
-          'file-loader?name=[path][name].html',
-          'pug-html-loader?pretty&exports=false'
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[hash].[ext]',
+              outputPath: 'icons/'
+            }
+          }
         ]
       },
       {
-        test: /\.php$/,
-        use: 'file-loader?name=/php/[hash:6].[ext]'
-      },
+		    test: /\.svg/,
+		    use: {
+	        loader: 'svg-url-loader',
+	        options: {}
+		    }
+			},
       {
-        test: /\.zip$/,
-        use: 'file-loader&name=/files/[name].[ext]'
-      },
-      {
-        test: /\.(jpg|jpeg|gif|png|svg)$/,
-        exclude: /node_modules/,
-        use: 'file-loader?name=/img/[hash:6].[ext]'
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf)$/,
-        exclude: /node_modules/,
-        use: 'file-loader?name=/font/[hash:6].[ext]'
+        test: /\.(gif|png|jpe?g)$/i,
+        use: [
+          'file-loader',
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              // bypassOnDebug: true, // webpack@1.x
+              // disable: true, // webpack@2.x and newer
+            },
+          },
+        ],
       }
     ]
   },
@@ -115,10 +140,6 @@ module.exports = {
           require('css-mqpacker')()
         ]
       }
-    }),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery'
     }),
     new ExtractTextPlugin(extractTextPluginOptions),
     new webpack.DefinePlugin({

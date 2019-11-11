@@ -1,8 +1,3 @@
 
-export const VERBOSITY_JS_MAX = 20;
-export const VERBOSITY_JS_MIN = 0;
-export const VERBOSITY_MAX = 20;
-export const VERBOSITY_MIN = 0;
-
-export const WASM_FILE_NAME = 'b4b0d61282108a31908dd6b2dbd7067b.wasm';
-export const WASM_FILE_HASH = 'b4b0d61282108a31908dd6b2dbd7067b';
+export const APP_ID = 54413
+export const APP_HASH = '2971aee0b50f8db4b71ee21bdbce38cd'

@@ -1,9 +1,15 @@
 import Dom from '@dom'
 import './styles/index.scss'
 // import TdLibController from '@core/utils/td-controller'
+import telegram from '@core/api'
+import api from '@core/api/login'
 
 // import Login from './containers/Login/index'
-import Login from './containers/Login/index-code'
+import Login from './containers/Login/index'
+
+setTimeout(() => {
+  api();
+}, 1000)
 // import Login from './containers/Login/index-user'
 
 // const setPhoneNumber = phone => {

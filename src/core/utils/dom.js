@@ -124,7 +124,7 @@ const setAttribute = (el, key, value) => {
 
 const createElement = (tag, attrs, ...children) => {
   if (attrs && attrs.key) {
-    console.log('createElement', attrs);
+    // console.log('createElement', attrs);
     let item = dom[attrs.key]
     if (!item) {
       item = {
@@ -132,10 +132,11 @@ const createElement = (tag, attrs, ...children) => {
       }
       const { key, ...attr } = attrs
       item.el = createElement(tag, attr, ...children);
-      console.log('item', item);
+      // console.log('item', item);
       dom[key] = item;
-      console.log('dom', dom);
+      // console.log('dom', dom);
     }
+    window._dom_ = dom
     return item.el;
   }
 

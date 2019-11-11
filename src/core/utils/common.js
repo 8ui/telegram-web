@@ -1,11 +1,11 @@
-import pako from 'pako';
+import { inflate } from 'pako/lib/inflate';
 
 const parseStickerData = async(blob) => {
   const r = await new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = async e => {
       try {
-        const result = pako.inflate(e.target.result, { to: 'string' });
+        const result = inflate(e.target.result, { to: 'string' });
         resolve(JSON.parse(result));
       } catch (err) {
         reject({ key, error: true, msg: err.toString() });

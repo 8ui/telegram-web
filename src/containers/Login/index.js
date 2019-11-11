@@ -1,4 +1,5 @@
 import Dom from '@dom'
+import Button from '@atoms/Button'
 import Header from './Header'
 import Form from './Form'
 import './styles.scss'

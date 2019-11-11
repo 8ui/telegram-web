@@ -3,24 +3,20 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
-    "start-https": "webpack-dev-server --https --key ./ssl/key.pem --cert ./ssl/cert.pem .",
     "start": "webpack-dev-server .",
+    "start-https": "webpack-dev-server --https --key ./ssl/key.pem --cert ./ssl/cert.pem .",
     "watch": "webpack --watch",
     "sass": "sass --watch src/styles/index.scss:public/bundle.css",
-    "watch:win": "./node_modules/.bin/webpack   --watch .",
-    "build": "rm -rf public &&  NODE_ENV=production webpack --config config.prod.js",
-    "build:win": "./node_modules/.bin/webpack .",
+    "build": "rm -rf dist &&  NODE_ENV=production webpack --config config.prod.js",
     "clean": "rm -rf target"
   },
   "dependencies": {
     "events": "^3.0.0",
+    "localforage": "^1.7.3",
     "lottie-web": "^5.5.9",
-    "node-sass": "^4.11.0",
+    "mtproto-storage-browser": "^0.1.5",
     "pako": "^1.0.10",
-    "tdweb": "^1.5.0"
-  },
-  "node": {
-    "fs": "empty"
+    "telegram-mtproto": "^3.2.11"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.51",
@@ -63,6 +59,7 @@
     "html-webpack-plugin": "^3.2.0",
     "image-webpack-loader": "^6.0.0",
     "loader": "^2.1.1",
+    "node-sass": "^4.11.0",
     "postcss": "^5.2.6",
     "postcss-flexbugs-fixes": "^4.1.0",
     "postcss-loader": "^3.0.0",
@@ -83,6 +80,7 @@
     "webpack": "^4.41.2",
     "webpack-cli": "^3.1.1",
     "webpack-dev-server": "^3.1.0",
-    "webpack-manifest-plugin": "^2.0.3"
+    "webpack-manifest-plugin": "^2.0.3",
+    "worker-loader": "^2.0.0"
   }
 }
