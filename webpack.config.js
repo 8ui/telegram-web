@@ -60,25 +60,10 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              url: true,
-            },
-          }, {
-            loader: 'postcss-loader',
-            options: {
-              plugins: () => [
-                // require('autoprefixer'),
-              ],
-            },
-          }, {
-            loader: 'sass-loader',
-            options: {
-              // includePaths: [].concat(project.paths.assets()),
-            },
-          },
+          { loader: 'style-loader' },
+          { loader: 'css-loader', options: { sourceMap: true } },
+          // 'postcss-loader',
+          { loader: 'sass-loader', options: { sourceMap: true } },
           { loader: 'sass-resources-loader',
             options: {
               sourceMap: true,
@@ -92,7 +77,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(zip|tgs)$/i,
+        test: /\.(zip)$/i,
         use: 'file-loader'
       },
       {
