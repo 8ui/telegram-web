@@ -16,7 +16,7 @@ class Lottie extends Dom.Component {
       rendererSettings,
       segments
     } = options;
-
+    console.log('Lottie', this.elem);
     this.options = {
       container: this.elem,
       renderer: 'svg',

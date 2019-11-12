@@ -74,7 +74,7 @@ import Login from './containers/Login/index-code'
 class App extends Dom.Component {
   render() {
     return (
-      <Login />
+      <Login key="login-page" />
     );
   }
 }

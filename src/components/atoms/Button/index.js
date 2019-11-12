@@ -4,6 +4,14 @@ import './styles.scss'
 
 
 class Button extends Dom.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      value: 'text'
+    }
+  }
+
   onMouseDown = (e) => {
     try {
       const Bubble = this.elem.getElementsByClassName('button__active')[0];
@@ -20,6 +28,10 @@ class Button extends Dom.Component {
     }
   }
 
+  onClick = () => {
+    this.setState({ value: 'next' });
+  }
+
   render() {
     const {
       loading,
@@ -32,10 +44,10 @@ class Button extends Dom.Component {
     return (
       <div
         onMouseDown={this.onMouseDown}
-        onClick={onClick}
+        onClick={this.onClick}
         className={classNames('button', className)}
       >
-        <span className="button__text">{children}</span>
+        <span className="button__text">{this.state.value} {children}</span>
         <span className="button__active"></span>
       </div>
     )

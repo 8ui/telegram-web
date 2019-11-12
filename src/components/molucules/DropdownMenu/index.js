@@ -7,7 +7,7 @@ import './styles.scss'
 class DropdownMenu extends Dom.Component {
   renderItem = (props, i) => {
     const { onChange } = this.props;
-    return (<DropdownItem key={`dropdown-${i}`} {...props} onChange={onChange} />)
+    return (<DropdownItem {...props} onChange={onChange} />)
   }
 
   render() {

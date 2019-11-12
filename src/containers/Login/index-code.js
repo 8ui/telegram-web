@@ -83,7 +83,6 @@ class Login extends Dom.Component {
             error={true}
             errorLabel="Invalid Code"
             label="Code"
-            key="form-user-code"
             onChange={(e) => this.setState({ code: e.target.value })}
             rightAddons={[
               <ButtonIcon name="eye1" />,

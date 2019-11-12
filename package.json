@@ -11,6 +11,8 @@
     "clean": "rm -rf target"
   },
   "dependencies": {
+    "deep-diff": "^1.0.2",
+    "deep-equal": "^1.1.0",
     "events": "^3.0.0",
     "localforage": "^1.7.3",
     "lottie-web": "^5.5.9",
