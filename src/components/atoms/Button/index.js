@@ -14,7 +14,7 @@ class Button extends Dom.Component {
 
   onMouseDown = (e) => {
     try {
-      const Bubble = this.elem.getElementsByClassName('button__active')[0];
+      const Bubble = this.elem.children[1];
       const width = Math.max(e.layerX, this.elem.offsetWidth - e.layerX) * 2;
       Bubble.style.animationName = '';
       void Bubble.offsetWidth;

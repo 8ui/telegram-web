@@ -184,7 +184,7 @@ const updateDomObject = (self) => {
       diffData.push(d);
     }
   }, (path, key) => {
-    return key === 'func' && path.length - path.indexOf('attrs') > 2
+    return key === 'func' || key === 'attrs'
   });
 
   console.log(diffData, prev, next);
