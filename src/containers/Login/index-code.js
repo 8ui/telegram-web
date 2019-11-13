@@ -16,6 +16,7 @@ class Login extends Dom.Component {
     this.stickers = ['Close','CloseAndPeek','CloseAndPeekToIdle','Idle','Peek','Tracking'];
     this.state = {
       stickers: [],
+      activeSticker: 3,
       code: null,
     }
 
@@ -45,11 +46,17 @@ class Login extends Dom.Component {
   }
 
   renderImage = () => {
-    const { stickers } = this.state;
+    const { stickers, activeSticker } = this.state;
 
     if (stickers.length) {
       return (
-        <Sticker className="login__logo-sticker" height={168} width={168} loop={false} animationData={stickers[3]} />
+        <Sticker
+          className="login__logo-sticker"
+          height={168}
+          width={168}
+          loop={false}
+          animationData={stickers[activeSticker]}
+        />
       )
     }
 
@@ -89,7 +96,7 @@ class Login extends Dom.Component {
             ]}
           />
         </div>
-        <Button>
+        <Button onClick={() => this.setState({ activeSticker: 2 })}>
           next
         </Button>
         {/* {stickers.map(n => <Sticker height={168} width={168} loop={true} animationData={n} />)} */}

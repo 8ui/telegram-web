@@ -132,9 +132,9 @@ Component.defaultProps = {}
 
 
 const getIdByPath = (path) => {
+  let item = dom;
+  let id;
   try {
-    let item = dom;
-    let id;
     for (var i = 0; i < path.length; i++) {
       if (i === path.length - 1) continue;
       item = item[path[i]]
@@ -144,13 +144,13 @@ const getIdByPath = (path) => {
     }
     return id;
   } catch (e) {
-    console.log(e);
+    console.warn('getIdByPath', item, path);
     return undefined;
   }
 }
 
 const applyChangesDom = (d) => {
-  // console.log(d.constructor.name);
+  console.log('d', d);
   switch (d.constructor.name) {
     case 'DiffArray': {
       const id = getIdByPath(d.path)
@@ -177,14 +177,17 @@ const updateDomObject = (self) => {
 
   // const diffData = diff(prev, next, (path, key) => key === 'func');
   const diffData = [];
-  diff.observableDiff(prev, next, (d) => {
+  diff.observableDiff(prev, next, (d, ...props) => {
     if (d && d.lhs && typeof d.lhs !== 'function' || !d.lhs) {
       applyChangesDom(d);
+      // console.error(...props);
       diffData.push(d);
     }
-  }, (path, key) => key === 'func');
+  }, (path, key) => {
+    return key === 'func' && path.length - path.indexOf('attrs') > 2
+  });
 
-  // console.log(diffData, prev, next);
+  console.log(diffData, prev, next);
   // dom = updateJsonDom(dom, next);
   diffData.forEach(d => {
     diff.applyChange(prev, next, d);
@@ -238,6 +241,9 @@ const getElementByKey = (obj, key) => {
   }
 }
 
+// const allowAttrs = ['className', 'value', ]
+// const setAllowAttrs
+
 const setKeysToDom = (item, key) => {
   if (
     item === null
@@ -253,6 +259,7 @@ const setKeysToDom = (item, key) => {
     if (Array.isArray(item)) {
       children = item
     } else {
+      // item.attrs = setAllowAttrs(item.attrs)
       item.attrs.id = key;
     }
 

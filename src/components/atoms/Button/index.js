@@ -28,10 +28,6 @@ class Button extends Dom.Component {
     }
   }
 
-  onClick = () => {
-    this.setState({ value: 'next' });
-  }
-
   render() {
     const {
       loading,
@@ -44,7 +40,7 @@ class Button extends Dom.Component {
     return (
       <div
         onMouseDown={this.onMouseDown}
-        onClick={this.onClick}
+        onClick={onClick}
         className={classNames('button', className)}
       >
         <span className="button__text">{this.state.value} {children}</span>
