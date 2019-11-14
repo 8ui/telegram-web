@@ -65,10 +65,12 @@ class Login extends Dom.Component {
 
   renderTitle = () => {
 
-    return [
-      <span>+33 1 23 45 67 89</span>,
-      <ButtonIcon name="edit" />
-    ]
+    return (
+      <div>
+        <span>+33 1 23 45 67 89</span>
+        <ButtonIcon name="edit" />
+      </div>
+    )
   }
 
   renderSubtitle = () => {

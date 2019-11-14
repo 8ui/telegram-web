@@ -5,17 +5,45 @@ import './styles.scss'
 
 
 class FieldCheckbox extends Dom.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      checked: this.props.checked,
+    }
+
+    this.checkboxRef = Dom.createRef();
+  }
+
+  onChange = (...props) => {
+    const { onChange } = this.props;
+    this.setState(
+      ({ checked }) => ({ checked: !checked }),
+      () => {
+        console.log('this.renderChekbox', this.renderChekbox);
+        this.replace(this.checkboxRef.id, this.renderChekbox);
+      }
+    )
+
+    onChange(...props);
+  }
+
+  renderChekbox = () => {
+    const { onChange, label, ...props } = this.props;
+
+    return <Checkbox ref={this.checkboxRef} {...props} />
+  }
 
   render () {
-    const { onChange, label, ...props } = this.props;
+    const { label } = this.props;
     return (
       <div
         className="checkbox-field"
-        onClick={onChange}
+        onClick={this.onChange}
       >
         <div className="checkbox-field__container">
           <div className="checkbox-field__check">
-            <Checkbox {...props} />
+            {this.renderChekbox()}
           </div>
           <div className="checkbox-field__label">
             {label}

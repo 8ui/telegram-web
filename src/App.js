@@ -4,8 +4,8 @@ import './styles/index.scss'
 // import telegram from '@core/api'
 // import api from '@core/api/login'
 
-// import Login from './containers/Login/index'
-import Login from './containers/Login/index-code'
+import Login from './containers/Login/index'
+// import Login from './containers/Login/index-code'
 
 // setTimeout(() => {
 //   api();
@@ -74,7 +74,7 @@ import Login from './containers/Login/index-code'
 class App extends Dom.Component {
   render() {
     return (
-      <Login key="login-page" />
+      <Login />
     );
   }
 }

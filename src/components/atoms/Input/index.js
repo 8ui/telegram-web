@@ -5,6 +5,10 @@ import './styles.scss'
 
 class Input extends Dom.Component {
   componentDidMount() {
+    if (this.props.value) {
+      this.elem.classList.add('input--with-value')
+      this.elem.replaceWith(document.createElement('span'))
+    }
     this.input = this.elem.getElementsByTagName('input')[0]
     addEventListener(
       this.input,
@@ -14,6 +18,7 @@ class Input extends Dom.Component {
   }
 
   componentWillUnmount() {
+    console.log('Input', 'componentWillUnmount');
     removeEventListener(
       this.input,
       'focus keydown keyup propertychange blur paste cut copy mousedown mouseup',
@@ -35,6 +40,7 @@ class Input extends Dom.Component {
   }
 
   onCaretMove = (e) => {
+    console.log(e.type);
     this.elem.classList.remove('input--caret-animated');
     const caret = this.elem.getElementsByClassName('input__caret')[0];
 
@@ -144,6 +150,7 @@ class Input extends Dom.Component {
           <span>
             <input
               {...input}
+              autocomplete="off"
               className="input-field"
               value={value}
               onKeyUp={onChange}

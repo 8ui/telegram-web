@@ -1,7 +1,7 @@
-import { renderDom } from '@dom';
+import Dom, { renderDom } from '@dom';
 import App from './App'
 
-renderDom('root', App);
+renderDom('root', <App />);
 
 if (module.hot) {
   module.hot.accept('./App.js', function() {

@@ -4,14 +4,6 @@ import './styles.scss'
 
 
 class Button extends Dom.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      value: 'text'
-    }
-  }
-
   onMouseDown = (e) => {
     try {
       const Bubble = this.elem.children[1];
@@ -43,7 +35,7 @@ class Button extends Dom.Component {
         onClick={onClick}
         className={classNames('button', className)}
       >
-        <span className="button__text">{this.state.value} {children}</span>
+        <span className="button__text">{children}</span>
         <span className="button__active"></span>
       </div>
     )

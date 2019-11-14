@@ -5,21 +5,28 @@ import './styles.scss'
 
 
 class DropdownMenu extends Dom.Component {
+  componentWillUnmount() {
+    console.log('DropdownMenu componentWillUnmount');
+  }
+  
   renderItem = (props, i) => {
     const { onChange } = this.props;
     return (<DropdownItem {...props} onChange={onChange} />)
   }
 
   render() {
-    const { data } = this.props;
+    const { data, ref } = this.props;
 
     return (
       <div
+        ref={ref}
         className="dropdown-menu"
       >
-        <div className="dropdown-menu__wrapper">
-          {data.map(this.renderItem)}
-        </div>
+        {data.length && (
+          <div className="dropdown-menu__wrapper">
+            {data.map(this.renderItem)}
+          </div>
+        )}
       </div>
     )
   }

@@ -3,27 +3,29 @@ import Icon from '@atoms/Icon'
 import './styles.scss'
 
 
-const DropdownItem = (props) => {
-  const {
-    onChange, selected, icon, text, value, placeholder,
-  } = props;
+class DropdownItem extends Dom.Component {
+  render() {
+    const {
+      onChange, selected, icon, text, value, placeholder,
+    } = this.props;
 
-  return (
-    <div
-      className={`dropdown-item${selected ? ' dropdown-item--active' : ''}`}
-      onClick={() => onChange(value, text)}
-    >
-      <div className="dropdown-item__icon">
-        <Icon name={icon} />
+    return (
+      <div
+        className={`dropdown-item${selected ? ' dropdown-item--active' : ''}`}
+        onClick={() => onChange(value, text)}
+      >
+        <div className="dropdown-item__icon">
+          <Icon name={icon} />
+        </div>
+        <div className="dropdown-item__text">
+          {text}
+        </div>
+        <div className="dropdown-item__placeholder">
+          {placeholder}
+        </div>
       </div>
-      <div className="dropdown-item__text">
-        {text}
-      </div>
-      <div className="dropdown-item__placeholder">
-        {placeholder}
-      </div>
-    </div>
-  )
+    )
+  }
 }
 
 DropdownItem.defaultProps = {
