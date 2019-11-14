@@ -2,8 +2,7 @@ import deepEqual from 'deep-equal';
 import diff from 'deep-diff';
 import { flat } from './common'
 
-// let dom = {};
-window.classes = {};
+let dom = {};
 
 const addEventListener = (el, name, fn) => {
   const names = Array.isArray(name) ? name : name.split(' ')
@@ -43,6 +42,18 @@ const setAttribute = (el, key, value) => {
   }
 }
 
+const setAttributes = (el, attrs = {}, addEventListener = false) => {
+  for (let attr in attrs) {
+    if (typeof attrs[attr] === 'function') {
+      if (addEventListener) addEventListener(el, attr, attrs[attr]);
+    } else {
+      if (['string', 'number'].includes(attrs[attr])) {
+        setAttribute(el, attr, attrs[attr]);
+      }
+    }
+  }
+}
+
 const replaceWith = (elemPrev, elemNext) => {
   const prev = Array.isArray(elemPrev) ? elemPrev : [elemPrev];
   const next = Array.isArray(elemNext) ? elemNext : [elemNext];
@@ -61,22 +72,21 @@ class Component {
 
   componentDidMount() { }
 
-  componentWillmount() {
+  componentWillmount() { }
+
+  componentWillUnmount() { }
+
+  shouldComponentUpdate() { return true }
+
+  componentWillUpdate() { }
+
+  componentDidUpdate() {
+    // console.log('updated', this.name);
   }
-
-  componentWillUnmount() {
-    // console.log('componentWillUnmount');
-  }
-
-  // shouldComponentUpdate() { return true }
-
-  // componentWillUpdate() { }
-  //
-  // componentDidUpdate() {}
 
   mount = (el) => {
     try {
-      this.id = el.id;
+      this.id = el.getAttribute('id');
 
       this.componentWillmount()
       this.elem = el;
@@ -92,73 +102,48 @@ class Component {
     this.componentWillUnmount();
   }
 
-  // update = (nextProps, nextState) => {
-  //   if (this.shouldComponentUpdate(nextProps, nextState)) {
-  //     this.componentWillUpdate(nextProps, nextState);
-  //
-  //     this.props = nextProps;
-  //     this.state = nextState;
-  //
-  //     // this.elem = updateDomObject(this);
-  //
-  //     this.componentDidUpdate(nextProps, nextState);
-  //   } else {
-  //     this.props = nextProps;
-  //     this.state = nextState;
-  //   }
-  //   return this.elem;
-  // }
+  update = (nextProps, nextState) => {
+    console.log('update');
+    if (this.shouldComponentUpdate(nextProps, nextState)) {
+      this.componentWillUpdate(nextProps, nextState);
+
+      this.props = nextProps;
+      this.state = nextState;
+
+      this.elem = updateDomObject(this);
+
+      this.componentDidUpdate(nextProps, nextState);
+    } else {
+      this.props = nextProps;
+      this.state = nextState;
+    }
+    return this.elem;
+  }
 
   setState = (data, fn) => {
     // console.log('setState', data, !!fn);
+    console.log('setState');
     const state = typeof data === 'function'
       ? data(this.state) : data
-    const nextState = { ...this.state, ...state };
 
+    const nextState = { ...this.state, ...state };
     if (deepEqual(nextState, this.state)) return;
-    // this.prevState = { ...this.state };
-    this.state = nextState;
+
+    this.prevState = { ...this.state };
 
     if (fn) {
-      fn(this.state);
+      fn(nextState);
     }
 
-    // this.update(this.props, nextState);
+    this.update(this.props, nextState);
   }
 
-  renderWrapper = (render) => {
-    const obj = render || this.render();
+  renderWrapper = () => {
+    const obj = this.render();
     return {
       ...obj,
       func: this,
     }
-  }
-
-  replace = (id, render, settings = {}) => {
-    const dom = setKeysToDom(render(), id);
-    console.log('replace', dom);
-    const html = getHtmlByJson(dom);
-    const el = this.getElementById(id)
-
-    if (settings.replaceChilds) {
-      el.innerHTML = '';
-      if (settings.setAttrs) setAttribute(el, dom.attrs);
-
-      if (html.children.length) {
-        const fragment = new DocumentFragment();
-        for (let i = 0; i < html.children.length; i++) {
-          fragment.append(html.children[i]);
-        }
-
-        el.append(fragment);
-      }
-    } else {
-      el.replaceWith(html)
-    }
-  }
-
-  getElementById = (id) => {
-    return document.getElementById(id);
   }
 }
 Component.defaultProps = {}
@@ -177,120 +162,122 @@ const deepComponentUnmount = (key) => {
   }
 }
 
-const getIdByPath = (path) => {
-  let item = dom;
-  let id;
-  try {
-    for (var i = 0; i < path.length; i++) {
-      if (i === path.length - 1) continue;
-      item = item[path[i]]
-      if (!Array.isArray(item)) {
-        id = item.attrs.id;
-      }
-    }
-    return id;
-  } catch (e) {
-    console.warn('getIdByPath', item, path);
-    return undefined;
+const updateDomJson = (id, prev, next) => {
+  if (prev.attrs.id === id) {
+    return next;
   }
+
+  for (var i = 0; i < prev.children.length; i++) {
+    if (prev.children[i].attrs.id === id) {
+      prev.children[i] = next;
+    } else {
+      prev.children[i] = updateDomJson(id, prev.children[i], next)
+    }
+  }
+
+  return prev;
 }
 
-const applyChangesDom = (d) => {
-  console.log('d', d);
-  switch (d.constructor.name) {
-    case 'DiffArray': {
-      const id = getIdByPath(d.path)
-      switch (d.item.constructor.name) {
-        case 'DiffNew':
-          const parent = document.getElementById(id);
-          // console.log();
-          parent.append(getHtmlByJson(d.item.rhs))
-          // console.log('d', d);
-          // console.log('parent', parent);
-          break;
-        default:
-
-      }
-      break;
+const compareAndUpdate = (prev, next, prevParent) => {
+  if (typeof prev !== 'object') {
+    switch (typeof prev) {
+      case 'string':
+        if (prev !== next && prevParent) {
+          if (typeof next === 'string') prevParent.appendChild(next);
+          else {
+            prevParent.appendChild(getHtmlByJson(next))
+          }
+        }
+        break;
+      default:
     }
-    default:
+    return ;
+  }
+
+  try {
+    const prevEl = document.getElementById(prev.attrs.id);
+    const nextEl = getHtmlByJson(next);
+    // if (prevEl.isEqualNode(nextEl)) {
+    //   return;
+    // } else {
+      if (prev.tag !== next.tag) {
+        return prevEl.replaceWith(nextEl);
+      }
+      const { children: prevChildred, ...prevAttrs } = prev.attrs;
+      const { children: nextChildred, ...nextAttrs } = next.attrs;
+      if (!deepEqual(prevAttrs, nextAttrs)) {
+        prev.attrs = next.attrs;
+        setAttributes(prevEl, next.attrs);
+        if (prev.func) {
+          const prevProps = {...prev.func.props};
+          const nextProps = {...prevProps, ...next.attrs};
+          // console.log('changed props', prev, next);
+          prev.func.componentWillUpdate(nextProps, prev.func.state)
+          prev.func.props = nextProps;
+          prev.func.componentDidUpdate(prevProps, prev.func.state)
+        }
+      }
+      const childrenLength = Math.max(prev.children.length, next.children.length);
+
+      const pushKeys = []
+      const removeKeys = []
+      for (var i = 0; i < childrenLength; i++) {
+        if (prev.children[i] && next.children[i]) {
+          compareAndUpdate(prev.children[i], next.children[i], prev);
+        } else if (!next.children[i]) {
+          // console.log('prevEl.children', prevEl.children);
+          prevEl.children[i].remove();
+          removeKeys.push(i)
+          if (prev.children[i].func) {
+            prev.children[i].func.unmount();
+          }
+        } else {
+          pushKeys.push([i, next.children[i]])
+          prevEl.appendChild(getHtmlByJson(next.children[i]));
+        }
+      }
+      if (removeKeys.length) {
+        // console.log('removeKeys', removeKeys);
+        prev.children = prev.children.filter((n, i) => (
+          removeKeys.indexOf(i) === -1
+        ))
+      }
+      if (pushKeys.length) {
+        // console.log('pushKeys', pushKeys);
+        for (var i = 0; i < pushKeys.length; i++) {
+          prev.children.splice(pushKeys[i][0], 0, pushKeys[i][1])
+        }
+      }
+    // }
+  } catch (e) {
+    console.log(e);
+    console.log({prev, next});
+    // throw new Error('Dom update error')
   }
 }
 
 const updateDomObject = (self) => {
-  const prev = getElementByKey(dom, self.id);
-  const next = setKeysToDom(self.renderWrapper(), self.id);
-
-
-
-  // const diffData = diff(prev, next, (path, key) => key === 'func');
-  // const diffData = [];
-  // diff.observableDiff(prev, next, (d, ...props) => {
-  //   if (d && d.lhs && typeof d.lhs !== 'function' || !d.lhs) {
-  //     applyChangesDom(d);
-  //     // console.error(...props);
-  //     diffData.push(d);
-  //   }
-  // }, (path, key) => {
-  //   return key === 'func' || key === 'attrs'
-  // });
-  //
-  // console.log(diffData, prev, next);
-  // // dom = updateJsonDom(dom, next);
-  // diffData.forEach(d => {
-  //   diff.applyChange(prev, next, d);
-  // })
-  // console.log(dom);
-  const elem = document.getElementById(self.id);
-  return elem;
-}
-
-// const updateJsonDom = (prev, next) => {
-//   try {
-//     if (prev.attrs.id === next.attrs.id) {
-//       return next;
-//     }
-//     for (var i = 0; i < prev.children.length; i++) {
-//       console.log(prev.children[i].attrs.id, next.attrs.id);
-//       if (prev.children[i].attrs.id === next.attrs.id) {
-//         prev.children[i] = next;
-//         console.log('Нашел', prev.children[i], next);
-//         continue;
-//       } else {
-//         updateJsonDom(prev.children[i], next);
-//       }
-//     }
-//   } catch (e) {
-//     console.log('ERROR', prev.children[i]);
-//   }
-//   return prev;
-// }
-
-renderComponent = ({ tag, props }) => {
-  switch (typeof component.tag) {
-    case 'function': {
-      if (tag.prototype instanceof Component) {
-        return
-      } else {
-
-      }
-      break;
-    }
-    case 'string': {
-      return getHtmlByJson()
-    }
-    default:
-
+  try {
+    const prev = getElementByKey(dom, self.id);
+    const next = setKeysToDom(self.renderWrapper(), self.id);
+    // if (prev === false) console.log(self);
+    compareAndUpdate(prev, next);
+    // console.log('dom', dom);
+    const elem = document.getElementById(self.id);
+    console.log({prev, next});
+    return elem;
+  } catch (e) {
+    console.log(e);
+    console.log({dom, self});
   }
-
 }
-
 
 const renderDom = (id, component) => {
-  // const d = new component()
-  // const el = document.getElementById(id);
-  return console.log(component.tag);
-  const dom = setKeysToDom(d.render(), 'app');
+  console.log('component', component);
+  const d = new component()
+  const el = document.getElementById(id);
+  dom = setKeysToDom(d.render(), 'app');
+  console.log('dom', dom);
   const html = getHtmlByJson(dom);
   if (el.children.length) {
     el.children.replaceWith(html);
@@ -313,9 +300,6 @@ const getElementByKey = (obj, key) => {
   }
 }
 
-// const allowAttrs = ['className', 'value', ]
-// const setAllowAttrs
-
 const setKeysToDom = (item, key) => {
   if (
     item === null
@@ -332,10 +316,6 @@ const setKeysToDom = (item, key) => {
       children = item
     } else {
       item.attrs.id = key;
-      if (classes[key]) {
-        deepComponentUnmount(key);
-      }
-      if (item.func) classes[key] = item.func
     }
 
     children.forEach((n, i) => {
@@ -353,48 +333,22 @@ const createElementWrapper = (tag, attrs, ...children) => {
   return createElement(tag, attrs || {}, ...children);
 }
 
-const DomOwner = {
-  current: null,
-}
-
 const createElement = (tag, attrs, ...children) => {
-  // if (typeof tag === 'function') {
-  //   const props = {...(tag.defaultProps || {}), ...attrs, children: (children.length ? children : undefined)}
-  //
-  //   if (tag.prototype instanceof Component) {
-  //     const child = new tag(props);
-  //     return child.renderWrapper();
-  //   } else {
-  //     return tag(props);
-  //   }
-  // }
+  if (typeof tag === 'function') {
+    const props = {...(tag.defaultProps || {}), ...attrs, children: (children.length ? children : undefined)}
 
-  let propName;
-  const props = attrs || {}
-
-  if (children.length === 1) {
-    props.children = children[0];
-  } else {
-    props.children = children;
-  }
-
-  if (tag && tag.defaultProps) {
-    const defaultProps = tag.defaultProps;
-
-    for (propName in defaultProps) {
-      if (props[propName] === undefined) {
-        props[propName] = defaultProps[propName];
-      }
+    if (tag.prototype instanceof Component) {
+      const child = new tag(props);
+      return child.renderWrapper();
+    } else {
+      return tag(props);
     }
   }
 
   try {
     if (tag) {
       return {
-        tag,
-        props,
-        children,
-        owner: DomOwner.current,
+        tag, attrs, children: flat(children).filter(n => !!n),
       }
     }
   } catch (e) {
@@ -404,34 +358,27 @@ const createElement = (tag, attrs, ...children) => {
   return undefined;
 }
 
-const getHtmlByJson = ({ tag, attrs, func }) => {
+const getHtmlByJson = ({ tag, attrs, children, func }) => {
   try {
     if (typeof tag === 'string') {
       const el = document.createElement(tag);
       if (attrs && typeof attrs === 'object') {
         for (let attr in attrs) {
-          if (attr === 'children') break;
           if (typeof attrs[attr] === 'function') {
             addEventListener(el, attr, attrs[attr]);
           } else if (attrs[attr] !== undefined) {
-            // if (attr.id) console.log(el, attr);
-            if (attr === 'ref') {
-              // console.log('ref', tag, attrs);
-              attrs[attr].el = el;
-              attrs[attr].id = attrs.id;
-            } else {
-              setAttribute(el, attr, attrs[attr]);
-            }
+            if (attr.id) console.log(el, attr);
+            setAttribute(el, attr, attrs[attr]);
           }
         }
       }
 
-      flat(props.children).forEach(item => {
+      flat(children).forEach(item => {
         if (['string', 'number'].includes(typeof item)) {
           el.innerHTML += item;
         } else if (item) {
           try {
-            el.append(getHtmlByJson(item))
+            el.appendChild(getHtmlByJson(item))
           } catch (e) {
             console.log(item, e);
           }
@@ -464,7 +411,7 @@ export {
 }
 
 class Dom {
-  static Component = Component;;
+  static Component = Component;
   static createElement = createElementWrapper;
   // static createElement = (...props) => console.log(...props);
   static Fragment = Fragment;
