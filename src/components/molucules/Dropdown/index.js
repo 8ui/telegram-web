@@ -18,7 +18,7 @@ class Dropdown extends Dom.Component {
   }
 
   componentDidUpdate() {
-    console.log('Dropdown update', this.props);
+    // console.warn('Dropdown componentDidUpdate', this.elem);
   }
 
   componentDidMount() {
@@ -31,7 +31,8 @@ class Dropdown extends Dom.Component {
   }
 
   onShow = () => {
-    console.log(this);
+    // console.log(this);
+    this.elem.getElementsByClassName('dropdown-menu__wrapper')[0].scrollTop = 0
     this.elem.classList.add('dropdown--active')
     this.elem.classList.remove('dropdown--hide');
   }
@@ -51,7 +52,7 @@ class Dropdown extends Dom.Component {
     const { onChange } = this.props;
     onChange(...props);
     // this.state.value = props;
-    console.warn(...props);
+    // console.warn(...props);
     this.onSearch('');
     // this.replace(
     //   this.elem.children[0].children[0].id,
@@ -71,17 +72,22 @@ class Dropdown extends Dom.Component {
   }
 
   onInputBlur = ({ target }) => {
-    console.log(this);
-    // if (this.getValue().name != target.value) {
-    //   target.value = this.getValue().name;
-    //   setTimeout(() => this.onSearch(''), 300)
-    // }
+    setTimeout(() => {
+      // console.log(this);
+      if (this.getValue().name != target.value) {
+        target.value = this.getValue().name;
+        if (target.value) {
+          this.elem.getElementsByClassName('input')[0].classList.add('input--with-value')
+        }
+        setTimeout(() => this.onSearch(''), 300)
+      }
+    }, 50)
   }
 
   renderTrigger = () => {
     const { error } = this.state;
     const { value, label, children } = this.props;
-    console.warn('this.getValue().name', this.getValue().name);
+    // console.warn('this.getValue().name', this.getValue().name);
     if (children) return children;
     return (
       <Input

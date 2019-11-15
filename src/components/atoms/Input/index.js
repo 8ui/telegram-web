@@ -7,10 +7,6 @@ class Input extends Dom.Component {
   events = 'focus keydown keyup propertychange blur paste cut copy mousedown mouseup'
 
   componentDidMount() {
-    if (this.props.value) {
-      this.elem.classList.add('input--with-value')
-      this.elem.replaceWith(document.createElement('span'))
-    }
     this.input = this.elem.getElementsByTagName('input')[0]
     addEventListener(
       this.input,
@@ -134,6 +130,7 @@ class Input extends Dom.Component {
       onChange,
       error,
       errorLabel,
+      parent,
       ...props
     } = this.props;
 

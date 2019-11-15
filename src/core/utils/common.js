@@ -17,6 +17,19 @@ export const parseStickerData = async(blob) => {
   return r;
 }
 
+export const getAllowPassProps = (vdom, reverse = false) => {
+  const props = getv(vdom, 'func.props') || {};
+  const result = {}
+  for (var prop in props) {
+    if (!reverse && typeof props[prop] !== 'function') {
+      result[prop] = props[prop];
+    } else if (reverse && typeof props[prop] === 'function') {
+      result[prop] = props[prop];
+    }
+  }
+  return result;
+}
+
 export function diffProps(a, b) {
   const prev = {}
   const next = {}
@@ -37,6 +50,16 @@ export function diffProps(a, b) {
   return result;
 }
 
+export function getv(obj, key) {
+  let result = obj;
+  const keys = key.split('.');
+  for (let i = 0; i < keys.length; i++) {
+    if (!result || !result[keys[i]]) return undefined;
+    result = result[keys[i]];
+  }
+  return result;
+}
+
 export function deepEqual(a, b) {
   if (a === b) return true;
   if (typeof a === 'function' && typeof b === 'function') return true;
@@ -45,7 +68,7 @@ export function deepEqual(a, b) {
     return false;
   }
   for (var prop in b) {
-    if ((!(prop in a) || !deepEqual(a[prop], b[prop])) && prop !== 'children') return false;
+    if (prop !== 'children' && (!(prop in a) || !deepEqual(a[prop], b[prop]))) return false;
   }
   return true;
 }

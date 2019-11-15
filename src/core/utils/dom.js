@@ -1,6 +1,12 @@
 // import deepEqual from 'deep-equal';
 import diff from 'deep-diff';
-import { flat, deepEqual, diffProps } from './common'
+import {
+  flat,
+  deepEqual,
+  diffProps,
+  getv,
+  getAllowPassProps,
+} from './common'
 
 let dom = {};
 
@@ -29,14 +35,6 @@ const removeEventListener = (el, name, fn) => {
 const setAttribute = (el, key, value) => {
   if (value === null) {
 
-  } else if (typeof value === 'object' && key === 'style') {
-    Object.keys(value).forEach(k => {
-      try {
-        el[key][k] = value[k];
-      } catch (e) {
-        console.log({ el, key, k, value });
-      }
-    })
   } else if (typeof value === 'string') {
     switch (key) {
       case 'value':
@@ -45,6 +43,14 @@ const setAttribute = (el, key, value) => {
       default:
         el.setAttribute(key === 'className' ? 'class' : key, value)
     }
+  } else if (typeof value === 'object' && key === 'style') {
+    Object.keys(value).forEach(k => {
+      try {
+        el[key][k] = value[k];
+      } catch (e) {
+        console.log({ el, key, k, value });
+      }
+    })
   }
 }
 
@@ -58,10 +64,11 @@ const removeAttributes = (el) => {
 const setAttributes = (el, attrs = {}) => {
   for (let attr in attrs) {
     if (typeof attrs[attr] === 'function') {
+      // console.log('setAttributes', el, attrs);
       el[attr.toLowerCase()] = attrs[attr];
     } else {
       if (['string', 'number'].includes(typeof attrs[attr])) {
-        console.log('setAttributes', el, attrs[attr]);
+        // console.log('setAttributes', el, attrs[attr]);
         setAttribute(el, attr, attrs[attr]);
       }
     }
@@ -79,6 +86,7 @@ const replaceWith = (elemPrev, elemNext) => {
 
 class Component {
   constructor(props) {
+    this.updateCount = window._updateCount;
     // if (props && !props.id) console.warn('No param ID', this);
     this.props = {...this.defaultProps, ...(props || {})};
     this.state = {...(this.state || {})};
@@ -104,7 +112,10 @@ class Component {
       this.id = el.getAttribute('id');
 
       this.componentWillmount()
+      if (!el) throw 'no element';
       this.elem = el;
+      // if (this.constructor.name === 'Input') console.log('componentDidMount', el);
+      // if (this.constructor.name === 'Input') console.trace();
       this.componentDidMount();
       return this.elem;
     } catch (e) {
@@ -120,7 +131,6 @@ class Component {
   }
 
   update = (nextProps, nextState) => {
-    console.log('update');
     if (this.shouldComponentUpdate(nextProps, nextState)) {
       this.componentWillUpdate(nextProps, nextState);
 
@@ -139,12 +149,13 @@ class Component {
 
   setState = (data, fn) => {
     // console.log('setState', data, !!fn);
+    if (!this.elem) throw this
     const state = typeof data === 'function'
       ? data(this.state) : data
 
     const nextState = { ...this.state, ...state };
     if (deepEqual(nextState, this.state)) return;
-    console.log('setState');
+    console.log('setState', this.constructor.name);
 
     this.prevState = { ...this.state };
 
@@ -189,26 +200,28 @@ const deepComponentUnmount = (obj) => {
   }
 }
 
-const updateDomJson = (id, prev, next) => {
-  if (prev.attrs.id === id) {
-    return next;
-  }
-
-  for (var i = 0; i < prev.children.length; i++) {
-    if (prev.children[i].attrs.id === id) {
-      prev.children[i] = next;
-    } else {
-      prev.children[i] = updateDomJson(id, prev.children[i], next)
-    }
-  }
-
-  return prev;
-}
+// const updateDomJson = (id, prev, next) => {
+//   if (prev.attrs.id === id) {
+//     return next;
+//   }
+//
+//   for (var i = 0; i < prev.children.length; i++) {
+//     if (prev.children[i].attrs.id === id) {
+//       prev.children[i] = next;
+//     } else {
+//       prev.children[i] = updateDomJson(id, prev.children[i], next)
+//     }
+//   }
+//
+//   return prev;
+// }
 
 window._getClass = (el) => {
   return getElementByKey(dom, el.id);
 }
 
+window._updateCount = 0;
+window._pending = 0;
 // window.deepEqual = deepEqual
 const compareAndUpdate = (prev, next, prevParent) => {
   if (!prev) {
@@ -239,7 +252,7 @@ const compareAndUpdate = (prev, next, prevParent) => {
     //   return;
     // } else {
 
-    // if (next.attrs.id === 'app-1-0-0-1-0') console.warn('app-1-0-0-1-0', key);
+    // if (next.attrs.id === 'app-1-0-0-0-0') console.table(['app-1-0-0-0-0', prev.attrs.className, next.attrs.className]);
 
     if (!prevEl) {
       if (prevParent) prevParent.appendChild(getHtmlByJson(next))
@@ -249,11 +262,15 @@ const compareAndUpdate = (prev, next, prevParent) => {
 
     // TODO: Сделать проверку по Class
     if (prev.tag !== next.tag) {
+      console.warn('prev.tag !== next.tag', prev.tag, next.tag);
       const nextEl = getHtmlByJson(next);
       return prevEl.replaceWith(nextEl);
     }
 
+    // if (prevEl.isEqualNode(nextEl)) return;
+
     const attrs = diffProps(prev.attrs, next.attrs)
+    // console.log('attrs', next.attrs.className);
     if (Object.keys(attrs).length !== 0) {
       // console.warn('ATTRS CHANGED', attrs);
       prev.attrs = next.attrs;
@@ -261,54 +278,82 @@ const compareAndUpdate = (prev, next, prevParent) => {
       // console.log('next.children', prevAttrs, nextAttrs);
     }
 
-    const prevProps = prev.func ? {...prev.func.props} : {};
-    const nextProps = next.func ? {...prevProps, ...next.func.props} : {};
+    const prevProps = getAllowPassProps(prev);
+    const nextProps = getAllowPassProps(next);
+
     const equalProps = deepEqual(prevProps, nextProps);
     if (!equalProps) {
-      // console.log('changed props', prev, next);
       prev.func.componentWillUpdate(nextProps, prev.func.state)
-      prev.func.props = nextProps;
+      prev.func.props = { ...getv(prev, 'func.props'), ...nextProps };
       prev.func.componentDidUpdate(prevProps, prev.func.state)
       // setAttributes(prevEl, attrs);
-      const events = {}
-      for (var i in nextProps) {
-        if (nextProps.hasOwnProperty(i) && typeof nextProps[i] === 'function') {
-          events[i] = nextProps[i]
-        }
-      }
-      setAttributes(prevEl, events);
+      // const events = {}
+      // for (var i in nextProps) {
+      //   if (nextProps.hasOwnProperty(i) && typeof nextProps[i] === 'function') {
+      //     events[i] = nextProps[i]
+      //   }
+      // }
+      // setAttributes(prevEl, events);
+      // console.log('changed props', prevEl, events);
       // console.log('PROPS CHANGED', prev.func, next.func);
     }
 
     let pushKeys = []
     let removeKeys = []
     let replaceKeys = []
-    let nextKeys = [];
+    let withKeys = getv(next.children, '0.attrs.key') || getv(prev.children, '0.attrs.key');
 
-    
-    for (var i = 0; i < next.children.length; i++) {
-      if (!next.children[i].attrs || !next.children[i].attrs.key) {
-        // console.log(next.children[i]);
-        continue;
+
+    if (withKeys) {
+      const prevEls = {}
+      const nextEls = []
+
+      for (var i = 0; i < prevEl.children.length; i++) {
+        prevEls[prevEl.children[i].getAttribute('key')] = {
+          vdom: prev.children[i],
+          el: prevEl.children[i],
+        };
       }
-      let prevChild;
-      const { attrs: { key } } = next.children[i]
 
-      for (var p = 0; p < prev.children.length; p++) {
-        if (prev.children[p].attrs.key === key) {
-          prevChild = {i: p, o: prev.children[p]};
-          continue;
+      for (var i = 0; i < next.children.length; i++) {
+        const { attrs: { key } } = next.children[i]
+        // console.log(key, getv(prevEls, `${key}.vdom`));
+
+        let vdom = getv(prevEls, `${key}.vdom`);
+        if (!vdom) {
+          vdom = next.children[i]
+          if (getv(vdom, 'func.props') && prev.propsForKeys) {
+            // console.warn('prev.propsForKeys', prev.propsForKeys);
+            vdom.func.props = { ...vdom.func.props, ...prev.propsForKeys }
+          }
+        }
+        nextEls.push({
+          vdom,
+          el: getv(prevEls, `${key}.el`) || getHtmlByJson(next.children[i]),
+        });
+        delete prevEls[key];
+      }
+
+      for (var i in prevEls) {
+        removeElement(prevEls[i].el, prevEls[i].vdom);
+      }
+      prev.children = []
+
+      for (var i in nextEls) {
+        try {
+          prevEl.appendChild(nextEls[i].el);
+          // console.log('updateCount', nextEls[i].vdom.func.updateCount);
+          prev.children.push(nextEls[i].vdom)
+        } catch (e) {
+          console.warn(nextEls.el);
         }
       }
-      nextKeys.push([
-        prevChild,
-        {i, o: next.children[i]}
-      ])
-      // if (!next.children[i]) console.warn('NOT FOUND', next); return;
+
+      // console.log({nextEls});
+      // prev.children = next.children;
+      return;
     }
-    //
-    // const prevEls = {}
-    //
+
     // if (nextKeys.length) {
     //   for (var i = 0; i < prevEl.children.length; i++) {
     //     prevEls[prevEl.children[i].getAttribute('key')] = prevEl.children[i];
@@ -332,23 +377,25 @@ const compareAndUpdate = (prev, next, prevParent) => {
     if (!prevEl) console.error(next);
     if (!next) console.error(prevEl);
 
-    const childrenLength = nextKeys.length ? 0 : Math.max(prevEl.children.length, next.children.length);
+    const childrenLength = Math.max(prevEl.children.length, next.children.length);
     for (var i = 0; i < childrenLength; i++) {
       if (prev.children[i] && next.children[i]) {
-        if (prev.children[i].attrs
-         && prev.children[i].attrs.className !== next.children[i].attrs.className) {
-          // console.log('next.children[i].attrs', JSON.parse(JSON.stringify(prev.children[i])), next.children[i].attrs);
-          deepComponentUnmount(prev.children[i]);
-          prevEl.children[i].replaceWith(getHtmlByJson(next.children[i]));
-          replaceKeys.push([i, next.children[i]])
-        } else {
-          // console.log('compareAndUpdate', prev.children[i], next.children[i]);
-          try {
-            compareAndUpdate(prev.children[i], next.children[i], prevEl);
-          } catch (e) {
-            console.warn('ERROR compareAndUpdate', prev.children[i], next.children[i], prevEl);
-          }
-        }
+        compareAndUpdate(prev.children[i], next.children[i], prevEl);
+        // if (prev.children[i].attrs
+        //  && prev.children[i].attrs.className !== next.children[i].attrs.className) {
+        //    console.warn(prev.children[i].attrs.className, next.children[i].attrs.className);
+        //   // console.log('next.children[i].attrs', JSON.parse(JSON.stringify(prev.children[i])), next.children[i].attrs);
+        //   deepComponentUnmount(prev.children[i]);
+        //   prevEl.children[i].replaceWith(getHtmlByJson(next.children[i]));
+        //   replaceKeys.push([i, next.children[i]])
+        // } else {
+        //   // console.log('compareAndUpdate', prev.children[i], next.children[i]);
+        //   try {
+        //     compareAndUpdate(prev.children[i], next.children[i], prevEl);
+        //   } catch (e) {
+        //     console.warn('ERROR compareAndUpdate', prev.children[i], next.children[i], prevEl);
+        //   }
+        // }
       } else if (!next.children[i]) {
         // console.log('prevEl.children', prevEl.children);
         // console.log('removed', prev.children[i]);
@@ -373,11 +420,7 @@ const compareAndUpdate = (prev, next, prevParent) => {
       // console.log('removeKeys', removeKeys);
       // console.log('removeKeys', removeKeys, prev);
       for (var i = 0; i < removeKeys.length; i++) {
-        deepComponentUnmount(removeKeys[i][2]);
-        removeKeys[i][1].remove()
-        if (removeKeys[i][2].func) {
-          removeKeys[i][2].func.unmount();
-        }
+        removeElement(removeKeys[i][1], removeKeys[i][2])
       }
       const keys = removeKeys.map(n => n[0]);
       prev.children = prev.children.filter((n, i) => keys.indexOf(i) === -1)
@@ -398,32 +441,46 @@ const compareAndUpdate = (prev, next, prevParent) => {
   }
 }
 
+const removeElement = (el, vdom) => {
+  deepComponentUnmount(vdom);
+  el.remove()
+  if (vdom.func) vdom.func.unmount();
+}
+
 const updateDomObject = (self) => {
+  if (window._pending) return self.elem;
+  window._updateCount++;
+  window._pending = 1;
   try {
     const prev = getElementByKey(dom, self.id);
-    // if (!prev) console.warn('getElementByKey(dom, self.id)', dom, self.id);
     const next = setKeysToDom(self.renderWrapper(), self.id);
     // if (prev === false) console.log(self);
     // console.warn('prev', getElementByKey(prev, 'app-1'));
     // return ;
-    console.log('prev', self.id, prev, next);
+    // console.log('prev', self.id, prev, next);
+
+    console.time('rendering')
     compareAndUpdate(prev, next);
-    // console.log('dom', dom);
+    console.timeEnd('rendering')
+
     const elem = document.getElementById(self.id);
-    console.log({prev, next});
+    // console.log({prev, next});
+    window._pending = 0;
     return elem;
   } catch (e) {
     console.log(e);
     console.log({dom, self});
   }
+  window._pending = 0;
 }
 
 const renderDom = (id, component) => {
-  console.log('component', component);
+  window._updateCount++;
+  // console.log('component', component);
   const d = new component()
   const el = document.getElementById(id);
   dom = setKeysToDom(d.render(), 'app');
-  console.log('dom', dom);
+  // console.log('dom', dom);
   const html = getHtmlByJson(dom);
   if (el.children.length) {
     el.children.replaceWith(html);
@@ -465,6 +522,10 @@ const setKeysToDom = (item, key) => {
       children = item
     } else {
       item.attrs.id = key;
+    }
+
+    if (getv(children, '0.attrs.key')) {
+      item.propsForKeys = getAllowPassProps(children[0], true)
     }
 
     children.forEach((n, i) => {
