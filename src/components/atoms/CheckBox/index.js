@@ -5,11 +5,10 @@ import './styles.scss'
 
 class Checkbox extends Dom.Component {
   render() {
-    const { checked, ref } = this.props;
-    console.log('Checkbox', ref);
+    const { checked } = this.props;
+    // console.log('Checkbox', checked);
     return (
       <div
-        ref={ref}
         className={`checkbox${checked ? ' checkbox--checked' : ''}`}
       >
         <Icon

@@ -1,6 +1,6 @@
 import { inflate } from 'pako/lib/inflate';
 
-const parseStickerData = async(blob) => {
+export const parseStickerData = async(blob) => {
   const r = await new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = async e => {
@@ -17,9 +17,42 @@ const parseStickerData = async(blob) => {
   return r;
 }
 
-const flat = arr => [].concat(...arr);
+export function diffProps(a, b) {
+  const prev = {}
+  const next = {}
+  const result = {}
+  for (var i in a) {
+    if (a.hasOwnProperty(i) && typeof a[i] === 'string' && a[i] !== b[i]) {
+      prev[i] = a[i]
+    }
+  }
+  for (var i in b) {
+    if (b.hasOwnProperty(i) && (typeof b[i] === 'string' || !b[i]) && a[i] !== b[i]) {
+      next[i] = b[i]
+    }
+  }
+  for (var i in { ...prev, ...next }) {
+    result[i] = next[i] || '';
+  }
+  return result;
+}
 
-function getOSName() {
+export function deepEqual(a, b) {
+  if (a === b) return true;
+  if (typeof a === 'function' && typeof b === 'function') return true;
+  if (a == null || typeof a != "object"
+   || b == null || typeof b != "object") {
+    return false;
+  }
+  for (var prop in b) {
+    if ((!(prop in a) || !deepEqual(a[prop], b[prop])) && prop !== 'children') return false;
+  }
+  return true;
+}
+
+export const flat = arr => [].concat(...arr);
+
+export function getOSName() {
   let OSName = 'Unknown';
   if (window.navigator.userAgent.indexOf('Windows NT 10.0') !== -1) OSName = 'Windows 10';
   if (window.navigator.userAgent.indexOf('Windows NT 6.2') !== -1) OSName = 'Windows 8';
@@ -34,7 +67,7 @@ function getOSName() {
   return OSName;
 }
 
-function getBrowser() {
+export function getBrowser() {
   let browser_name = '';
   let isIE = /*@cc_on!@*/ false || !!document.documentMode;
   let isEdge = !isIE && !!window.StyleMedia;
@@ -56,7 +89,7 @@ function getBrowser() {
   return browser_name;
 }
 
-function stringToBoolean(string) {
+export function stringToBoolean(string) {
   switch (string.toLowerCase().trim()) {
     case 'true':
     case 'yes':
@@ -71,11 +104,3 @@ function stringToBoolean(string) {
       return Boolean(string);
   }
 }
-
-export {
-  getBrowser,
-  getOSName,
-  stringToBoolean,
-  parseStickerData,
-  flat,
-};

@@ -8,15 +8,15 @@ class DropdownMenu extends Dom.Component {
   componentWillUnmount() {
     console.log('DropdownMenu componentWillUnmount');
   }
-  
+
   renderItem = (props, i) => {
     const { onChange } = this.props;
-    return (<DropdownItem {...props} onChange={onChange} />)
+    return (<DropdownItem key={props.code} {...props} onChange={onChange} />)
   }
 
   render() {
     const { data, ref } = this.props;
-
+    // console.log('render', data);
     return (
       <div
         ref={ref}

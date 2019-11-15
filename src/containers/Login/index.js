@@ -5,13 +5,24 @@ import Form from './Form'
 import './styles.scss'
 
 class Login extends Dom.Component {
+  state = {
+    show: true,
+  }
+
   render() {
+    const { show } = this.state;
     return (
       <div className="login">
         <Header />
-        <Form />
+        {show && (
+          <Form />
+        )}
 
-        <Button>
+        {/* <Button>
+          prev
+        </Button> */}
+
+        <Button onClick={() => this.setState(({ show }) => ({ show: !show }))}>
           next
         </Button>
       </div>

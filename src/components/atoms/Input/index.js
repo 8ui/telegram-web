@@ -4,6 +4,8 @@ import './styles.scss'
 
 
 class Input extends Dom.Component {
+  events = 'focus keydown keyup propertychange blur paste cut copy mousedown mouseup'
+
   componentDidMount() {
     if (this.props.value) {
       this.elem.classList.add('input--with-value')
@@ -12,16 +14,16 @@ class Input extends Dom.Component {
     this.input = this.elem.getElementsByTagName('input')[0]
     addEventListener(
       this.input,
-      'focus keydown keyup propertychange blur paste cut copy mousedown mouseup',
+      this.events,
       this.onCaretMove
     );
   }
 
   componentWillUnmount() {
-    console.log('Input', 'componentWillUnmount');
+    // console.log('Input', 'componentWillUnmount');
     removeEventListener(
       this.input,
-      'focus keydown keyup propertychange blur paste cut copy mousedown mouseup',
+      this.events,
       this.onCaretMove
     );
   }
@@ -40,7 +42,7 @@ class Input extends Dom.Component {
   }
 
   onCaretMove = (e) => {
-    console.log(e.type);
+    // console.log(e.type);
     this.elem.classList.remove('input--caret-animated');
     const caret = this.elem.getElementsByClassName('input__caret')[0];
 

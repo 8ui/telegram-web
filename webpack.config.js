@@ -34,6 +34,7 @@ module.exports = {
       '@dom': path.join(__dirname, '/src/core/utils/dom'),
       '@core': path.join(__dirname, '/src/core'),
       '@images': path.join(__dirname, '/src/images'),
+      '@domain': path.join(__dirname, '/src/domain'),
     }
   },
   resolveLoader: {

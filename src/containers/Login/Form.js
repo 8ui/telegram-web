@@ -2,6 +2,7 @@ import Dom from '@dom'
 import Field from '@atoms/Field'
 import Button from '@atoms/Button'
 import Dropdown from '@molucules/Dropdown'
+import countries from '@domain/countries.json'
 import FieldCheckbox from '@atoms/FieldCheckbox'
 
 class Form extends Dom.Component {
@@ -27,37 +28,14 @@ class Form extends Dom.Component {
 
   render() {
     const { keepMeCheckbox, phone, country } = this.state;
+    // console.warn('country', country);
     return (
       <div className="login-form">
         <Field>
           <Dropdown
-            data={[
-              { value: 'ru', icon: 'car', text: 'Afghanistan', placeholder: '+93' },
-              { value: 'ru', icon: 'car', text: 'Albania', placeholder: '+355' },
-              { value: 'ru', icon: 'car', text: 'Algeria', placeholder: '+213' },
-              { value: 'ru', icon: 'car', text: 'American Samoa', placeholder: '+1684' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-              { value: 'ru', icon: 'car', text: 'Russia', placeholder: '+7' },
-            ]}
+            data={countries}
             value={country}
-            onChange={console.log}
+            onChange={(value) => this.setState({ country: value })}
             label="Country"
           />
         </Field>
