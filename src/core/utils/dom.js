@@ -1,4 +1,4 @@
-// import deepEqual from 'deep-equal';
+import deepEqual2 from 'deep-equal';
 import diff from 'deep-diff';
 import {
   flat,
@@ -130,7 +130,7 @@ class Component {
 
   }
 
-  update = (nextProps, nextState) => {
+  update = (nextProps, nextState, callback) => {
     if (this.shouldComponentUpdate(nextProps, nextState)) {
       this.componentWillUpdate(nextProps, nextState);
 
@@ -144,26 +144,25 @@ class Component {
       this.props = nextProps;
       this.state = nextState;
     }
+
+    if (callback) callback(nextState);
     return this.elem;
   }
 
-  setState = (data, fn) => {
+  setState = (data, callback) => {
     // console.log('setState', data, !!fn);
     if (!this.elem) throw this
     const state = typeof data === 'function'
       ? data(this.state) : data
 
     const nextState = { ...this.state, ...state };
-    if (deepEqual(nextState, this.state)) return;
-    console.log('setState', this.constructor.name);
+    console.log('prev setState', this.constructor.name, nextState, this.state);
+    if (deepEqual2(nextState, this.state)) return;
+    console.log('next setState', this.constructor.name);
 
     this.prevState = { ...this.state };
 
-    if (fn) {
-      fn(nextState);
-    }
-
-    this.update(this.props, nextState);
+    this.update(this.props, nextState, callback);
   }
 
   renderWrapper = () => {
@@ -252,7 +251,7 @@ const compareAndUpdate = (prev, next, prevParent) => {
     //   return;
     // } else {
 
-    // if (next.attrs.id === 'app-1-0-0-0-0') console.table(['app-1-0-0-0-0', prev.attrs.className, next.attrs.className]);
+    if (next.attrs.className === 'login__logo-sticker') console.table('login__logo-stickerset', prev, next);
 
     if (!prevEl) {
       if (prevParent) prevParent.appendChild(getHtmlByJson(next))
@@ -380,6 +379,9 @@ const compareAndUpdate = (prev, next, prevParent) => {
     const childrenLength = Math.max(prevEl.children.length, next.children.length);
     for (var i = 0; i < childrenLength; i++) {
       if (prev.children[i] && next.children[i]) {
+        // if (prevEl.children[i].getAttribute('class') === 'login__logo') {
+        //   console.warn(prevEl.children[i]);
+        // }
         compareAndUpdate(prev.children[i], next.children[i], prevEl);
         // if (prev.children[i].attrs
         //  && prev.children[i].attrs.className !== next.children[i].attrs.className) {
@@ -405,7 +407,7 @@ const compareAndUpdate = (prev, next, prevParent) => {
         // } catch (e) {
         //   console.warn('prevEl.children[i]', prevEl.children.length);
         // }
-        removeKeys.push([i, prevEl.children[i], prev.children[i]])
+        if (prev.children[i]) removeKeys.push([i, prevEl.children[i], prev.children[i]])
       } else {
         pushKeys.push([i, next.children[i]])
       }
@@ -420,7 +422,11 @@ const compareAndUpdate = (prev, next, prevParent) => {
       // console.log('removeKeys', removeKeys);
       // console.log('removeKeys', removeKeys, prev);
       for (var i = 0; i < removeKeys.length; i++) {
-        removeElement(removeKeys[i][1], removeKeys[i][2])
+        try {
+          removeElement(removeKeys[i][1], removeKeys[i][2])
+        } catch (e) {
+          throw removeKeys[i]
+        }
       }
       const keys = removeKeys.map(n => n[0]);
       prev.children = prev.children.filter((n, i) => keys.indexOf(i) === -1)
@@ -437,7 +443,7 @@ const compareAndUpdate = (prev, next, prevParent) => {
   } catch (e) {
     console.warn(e);
     console.warn({prev, next});
-    throw new Error('Dom update error')
+    // throw new Error('Dom update error')
   }
 }
 

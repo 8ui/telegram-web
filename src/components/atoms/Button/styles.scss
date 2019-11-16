@@ -23,6 +23,10 @@
     pointer-events: none;
   }
 
+  &--hidden {
+    display: none;
+  }
+
   @keyframes buttonActiveAnimate {
     0% {
       opacity: 0.08;

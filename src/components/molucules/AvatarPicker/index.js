@@ -39,21 +39,23 @@ class AvatarPicker extends Dom.Component {
       onLoad,
     } = this.props;
 
-    return [
-      <div className="avatar-picker">
-        {this.renderImage()}
-        <div onClick={this.onOpen} className="avatar-picker__picker">
-          <Icon name="cameraadd" />
+    return (
+      <div>
+        <div className="avatar-picker">
+          {this.renderImage()}
+          <div onClick={this.onOpen} className="avatar-picker__picker">
+            <Icon name="cameraadd" />
+          </div>
         </div>
-      </div>,
-      <Modal
-        visible={modal}
-        onClose={this.onClose}
-        onSuccess={this.onSuccess}
-      >
-        <ImageCrop />
-      </Modal>
-    ]
+        <Modal
+          visible={modal}
+          onClose={this.onClose}
+          onSuccess={this.onSuccess}
+        >
+          <ImageCrop />
+        </Modal>
+      </div>
+    )
   }
 }
 

@@ -1,30 +1,21 @@
 import Dom from '@dom'
-import Button from '@atoms/Button'
-import Header from './Header'
-import Form from './Form'
+import Page1 from './Page1'
+import Page2 from './Page2'
+import Page3 from './Page3'
 import './styles.scss'
 
 class Login extends Dom.Component {
   state = {
-    show: true,
+    page: 1,
   }
 
   render() {
-    const { show } = this.state;
+    const { page } = this.state;
     return (
       <div className="login">
-        <Header />
-        {show && (
-          <Form />
-        )}
-
-        {/* <Button>
-          prev
-        </Button> */}
-
-        <Button onClick={() => this.setState(({ show }) => ({ show: !show }))}>
-          next
-        </Button>
+        <Page1 />
+        <Page2 />
+        <Page3 />
       </div>
     )
   }

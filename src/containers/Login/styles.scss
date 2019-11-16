@@ -32,15 +32,17 @@
     &__title {
       margin: 31px 0 10px;
       height: 44px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      span {
-        margin-left: 12px;
-      }
-      .button-icon {
-        margin-left: -1px;
+      > div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        span {
+          margin-left: 12px;
+        }
+        .button-icon {
+          margin-left: -1px;
+        }
       }
     }
     &__title {
@@ -55,6 +57,6 @@
     margin-bottom: 12px;
   }
   .checkbox-field {
-    margin-bottom: 15px;
+    margin-bottom: 27px; // 15
   }
 }

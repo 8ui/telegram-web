@@ -25,6 +25,13 @@ module.exports = {
   watchOptions: {
     aggregateTimeout: 300
   },
+  // externals: {
+  //   'telegram-mtproto': 'telegram-mtproto',
+  //   // [
+  //     // JSON.stringify(require('./public/dist/mtproto2-browser.js')),
+  //     // JSON.stringify(require('./public/dist/vendor.dll.js')),
+  //   // ],
+  // },
   resolve: {
     extensions: ['*', '.js', '.styl'],
     alias: {
@@ -116,6 +123,12 @@ module.exports = {
     ]
   },
   plugins: [
+    // new webpack.DllReferencePlugin({
+    //   context: path.join(__dirname, 'node_modules/telegram-mtproto/src'),
+    //   manifest: require('./public/dist/vendor.json'),
+    //   scope: 'vendor',
+    //   sourceType: 'commonjs2'
+    // }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false,

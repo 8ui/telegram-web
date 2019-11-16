@@ -5,11 +5,10 @@ import AvatarPicker from '@molucules/AvatarPicker'
 import Field from '@atoms/Field'
 import Button from '@atoms/Button'
 import Header from './Header'
-import Form from './Form'
 import './styles.scss'
 
 
-class Login extends Dom.Component {
+class Page3 extends Dom.Component {
   renderImage = () => {
     return (
       <AvatarPicker
@@ -55,4 +54,4 @@ class Login extends Dom.Component {
   }
 }
 
-export default Login;
+export default Page3;

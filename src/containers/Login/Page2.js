@@ -5,11 +5,10 @@ import Sticker from '@atoms/Sticker'
 import Field from '@atoms/Field'
 import Button from '@atoms/Button'
 import Header from './Header'
-import Form from './Form'
 import './styles.scss'
 
 
-class Login extends Dom.Component {
+class Page2 extends Dom.Component {
   constructor(props) {
     super(props)
 
@@ -31,9 +30,13 @@ class Login extends Dom.Component {
       promises.push(this.loadBlob(n));
     })
 
-    const r = await Promise.all(promises)
+    console.log(promises);
 
-    this.setState({ stickers: r })
+    const r = await Promise.all(promises)
+    console.log(r);
+    this.setState({ stickers: r }, () => {
+      console.log(r);
+    })
     return r;
   }
 
@@ -42,13 +45,14 @@ class Login extends Dom.Component {
     const blob = await fetch(url).then(r => r.blob());
 
     const data = await parseStickerData(blob);
+    console.log('data', data);
     return data;
   }
 
   renderImage = () => {
     const { stickers, activeSticker } = this.state;
-
-    if (stickers.length) {
+    console.warn('renderImage', activeSticker, stickers);
+    if (activeSticker) {
       return (
         <Sticker
           className="login__logo-sticker"
@@ -107,4 +111,4 @@ class Login extends Dom.Component {
   }
 }
 
-export default Login;
+export default Page2;

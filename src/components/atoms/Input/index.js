@@ -1,5 +1,6 @@
 import Dom, { addEventListener, removeEventListener } from '@dom'
 import classNames from 'classnames';
+import { parsePhoneNumberFromString } from 'libphonenumber-js/mobile'
 import './styles.scss'
 
 
@@ -56,6 +57,9 @@ class Input extends Dom.Component {
       }
       case 'focus': {
         this.elem.classList.add('input--active');
+        if (value) this.elem.classList.add('input--with-value');
+        caret.style.display = 'block';
+        break;
       }
       case 'mousedown': return caret.style.display = 'none';
       case 'mouseup': caret.style.display = 'block'; break
@@ -119,6 +123,23 @@ class Input extends Dom.Component {
     )
   }
 
+  onChange = (e) => {
+    const { onChange, phone } = this.props;
+    // console.warn('phone', phone);
+    if (phone) {
+      // console.log('number', e.target.value, phone);
+      const number = parsePhoneNumberFromString(e.target.value.replace(/\s/g, ''), phone);
+      if (number && number.isValid()) {
+        onChange({ target: { value: number.number } });
+        e.target.value = number.formatInternational();
+      } else {
+        onChange({ target: { value: null } });
+      }
+    } else {
+      onChange(e);
+    }
+  }
+
   render () {
     const {
       label,
@@ -152,7 +173,7 @@ class Input extends Dom.Component {
               autocomplete="off"
               className="input-field"
               value={value}
-              onKeyUp={onChange}
+              onKeyUp={this.onChange}
               placeholder={placeholder}
               type="text"
               spellcheck="false"
