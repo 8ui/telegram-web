@@ -14,8 +14,8 @@ class Login extends Dom.Component {
     return (
       <div className="login">
         <Page1 />
-        <Page2 />
-        <Page3 />
+        {/*<Page2 />*/}
+        {/*<Page3 />*/}
       </div>
     )
   }

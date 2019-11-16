@@ -34,22 +34,33 @@ module.exports = {
   optimization: {
     minimizer: [
       new UglifyJsPlugin({
-        test: /\.js(\?.*)?$/i,
-      }),
-    ],
-    runtimeChunk: false,
-    splitChunks: {
-      cacheGroups: {
-        default: false,
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendor_app',
-          chunks: 'all',
-          minChunks: 2
+        uglifyOptions: {
+          output: {
+            comments: false
+          }
         }
-      }
-    }
+      })
+    ]
   },
+  // optimization: {
+  //   minimizer: [
+  //     new UglifyJsPlugin({
+  //       test: /\.js(\?.*)?$/i,
+  //     }),
+  //   ],
+  //   runtimeChunk: false,
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       default: false,
+  //       commons: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         name: 'vendor_app',
+  //         chunks: 'all',
+  //         minChunks: 2
+  //       }
+  //     }
+  //   }
+  // },
   resolve: {
     extensions: ['*', '.js', '.styl', '.pub'],
     alias: {
@@ -59,6 +70,7 @@ module.exports = {
       '@dom': path.join(__dirname, '/src/core/utils/dom'),
       '@core': path.join(__dirname, '/src/core'),
       '@images': path.join(__dirname, '/src/images'),
+      '@domain': path.join(__dirname, '/src/domain'),
     }
   },
   resolveLoader: {

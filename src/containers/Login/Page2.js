@@ -84,7 +84,7 @@ class Page2 extends Dom.Component {
   render() {
     const { stickers } = this.state
     return (
-      <div className="login">
+      <div>
         <Header
           renderImage={this.renderImage}
           renderTitle={this.renderTitle}
@@ -102,7 +102,9 @@ class Page2 extends Dom.Component {
             ]}
           />
         </div>
-        <Button onClick={() => this.setState({ activeSticker: 2 })}>
+        <Button
+          onClick={() => this.setState({ activeSticker: 2 })}
+        >
           next
         </Button>
         {/* {stickers.map(n => <Sticker height={168} width={168} loop={true} animationData={n} />)} */}

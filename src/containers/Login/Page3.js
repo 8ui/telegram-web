@@ -29,7 +29,7 @@ class Page3 extends Dom.Component {
 
   render() {
     return (
-      <div className="login">
+      <div>
         <Header
           renderImage={this.renderImage}
           renderTitle={this.renderTitle}

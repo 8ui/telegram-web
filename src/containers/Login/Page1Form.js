@@ -79,7 +79,6 @@ class Form extends Dom.Component {
           </Field>
           <Field
             onChange={this.onChangePhone}
-            value={phone}
             label="Phone Number"
             phone={country}
           />
@@ -90,8 +89,9 @@ class Form extends Dom.Component {
           />
         </div>
         <Button
-          className="button--hidden"
+          className="button--hidden-"
           onClick={this.goNextPage}
+          loading
         >
           next
         </Button>
