@@ -11,13 +11,19 @@ import {
 let dom = {};
 
 const addEventListener = (el, name, fn) => {
+  // if (name === 'onMouseDown') {
+  //   console.log('addEventListener', el, name, fn);
+  //   console.trace();
+  // }
   const names = Array.isArray(name) ? name : name.split(' ')
   names.forEach((n) => {
-    el.addEventListener(
-      n.replace(/^on/, '').toLowerCase(),
-      fn,
-      false
-    );
+    if (fn) {
+      el.addEventListener(
+        n.replace(/^on/, '').toLowerCase(),
+        fn,
+        false
+      );
+    }
   })
 }
 
@@ -151,18 +157,24 @@ class Component {
 
   setState = (data, callback) => {
     // console.log('setState', data, !!fn);
-    if (!this.elem) throw this
+    // if (!this.elem) throw this
     const state = typeof data === 'function'
       ? data(this.state) : data
 
     const nextState = { ...this.state, ...state };
     console.log('prev setState', this.constructor.name, nextState, this.state);
     if (deepEqual2(nextState, this.state)) return;
+    // return;
     console.log('next setState', this.constructor.name);
 
     this.prevState = { ...this.state };
 
     this.update(this.props, nextState, callback);
+  }
+
+  setStateW = (state, callback) => {
+    this.state = { ...this.state, ...state };
+    if (callback) callback();
   }
 
   renderWrapper = () => {
@@ -234,6 +246,7 @@ const compareAndUpdate = (prev, next, prevParent) => {
       case 'number':
       case 'string':
         if (prev !== next && prevParent) {
+          console.warn(prevParent.innerText, prev, next);
           if (typeof next === 'string') prevParent.innerText = next;
           else {
             prevParent.appendChild(getHtmlByJson(next))
@@ -251,11 +264,11 @@ const compareAndUpdate = (prev, next, prevParent) => {
     //   return;
     // } else {
 
-    if (next.attrs.className === 'login__logo-sticker') console.table('login__logo-stickerset', prev, next);
+    // if (next.attrs.id === 'app-1-0-1-1-0-1-0-0') console.table('app-1-0-1-1-0-1-0-0', prev, next);
 
     if (!prevEl) {
       if (prevParent) prevParent.appendChild(getHtmlByJson(next))
-      throw '!prevEl'
+      throw { prev, next, prevEl }
       return;
     }
 
@@ -282,8 +295,11 @@ const compareAndUpdate = (prev, next, prevParent) => {
 
     const equalProps = deepEqual(prevProps, nextProps);
     if (!equalProps) {
+      // if (!prevParent) {
+      //   prev.func.props = { ...prev.func.props, ...getAllowPassProps(prev, true) }
+      // }
       prev.func.componentWillUpdate(nextProps, prev.func.state)
-      prev.func.props = { ...getv(prev, 'func.props'), ...nextProps };
+      prev.func.props = { ...prev.func.props, ...nextProps };
       prev.func.componentDidUpdate(prevProps, prev.func.state)
       // setAttributes(prevEl, attrs);
       // const events = {}
@@ -322,13 +338,15 @@ const compareAndUpdate = (prev, next, prevParent) => {
         if (!vdom) {
           vdom = next.children[i]
           if (getv(vdom, 'func.props') && prev.propsForKeys) {
-            // console.warn('prev.propsForKeys', prev.propsForKeys);
+            // console.warn('prev.propsForKeys', vdom.func.constructor.name, prev.propsForKeys);
             vdom.func.props = { ...vdom.func.props, ...prev.propsForKeys }
+            // vdom.attrs = { ...vdom.attrs, ...prev.attrsForKeys }
+            // console.log('prev.attrsForKeys', prev.attrsForKeys);
           }
         }
         nextEls.push({
           vdom,
-          el: getv(prevEls, `${key}.el`) || getHtmlByJson(next.children[i]),
+          el: getv(prevEls, `${key}.el`) || getHtmlByJson(vdom),
         });
         delete prevEls[key];
       }
@@ -382,7 +400,11 @@ const compareAndUpdate = (prev, next, prevParent) => {
         // if (prevEl.children[i].getAttribute('class') === 'login__logo') {
         //   console.warn(prevEl.children[i]);
         // }
-        compareAndUpdate(prev.children[i], next.children[i], prevEl);
+        if (typeof next.children[i] === 'string') {
+          replaceKeys.push([i, prev.children[i], next.children[i]]);
+        } else {
+          compareAndUpdate(prev.children[i], next.children[i], prevEl);
+        }
         // if (prev.children[i].attrs
         //  && prev.children[i].attrs.className !== next.children[i].attrs.className) {
         //    console.warn(prev.children[i].attrs.className, next.children[i].attrs.className);
@@ -415,18 +437,21 @@ const compareAndUpdate = (prev, next, prevParent) => {
     if (replaceKeys.length) {
       // console.log('replaceKeys', replaceKeys, next);
       for (var i = 0; i < replaceKeys.length; i++) {
-        prev.children.splice(replaceKeys[i][0], 1, replaceKeys[i][1])
+        const [index, prevText, nextText] = replaceKeys[i];
+        if (typeof nextText === 'string') {
+          if (typeof prevText === 'string') {
+            prevEl.innerText = nextText;
+          }
+        }
+        prev.children.splice(index, 1, nextText)
+        // console.error('prev.children', prev.children);
       }
     }
     if (removeKeys.length) {
       // console.log('removeKeys', removeKeys);
       // console.log('removeKeys', removeKeys, prev);
       for (var i = 0; i < removeKeys.length; i++) {
-        try {
-          removeElement(removeKeys[i][1], removeKeys[i][2])
-        } catch (e) {
-          throw removeKeys[i]
-        }
+        removeElement(removeKeys[i][1], removeKeys[i][2])
       }
       const keys = removeKeys.map(n => n[0]);
       prev.children = prev.children.filter((n, i) => keys.indexOf(i) === -1)
@@ -448,9 +473,16 @@ const compareAndUpdate = (prev, next, prevParent) => {
 }
 
 const removeElement = (el, vdom) => {
-  deepComponentUnmount(vdom);
-  el.remove()
-  if (vdom.func) vdom.func.unmount();
+  try {
+    deepComponentUnmount(vdom);
+    el.remove()
+    if (vdom.func) vdom.func.unmount();
+  } catch (e) {
+    console.warn('ERROR: removeElement', e, el, vdom);
+    console.trace();
+    throw e;
+  } finally {
+  }
 }
 
 const updateDomObject = (self) => {
@@ -459,7 +491,9 @@ const updateDomObject = (self) => {
   window._pending = 1;
   try {
     const prev = getElementByKey(dom, self.id);
+    // console.warn(self.constructor.name);
     const next = setKeysToDom(self.renderWrapper(), self.id);
+    console.warn('render', {prev, next});
     // if (prev === false) console.log(self);
     // console.warn('prev', getElementByKey(prev, 'app-1'));
     // return ;
@@ -531,6 +565,7 @@ const setKeysToDom = (item, key) => {
     }
 
     if (getv(children, '0.attrs.key')) {
+      // item.attrsForKeys = getAllowPassProps(children[0], true, 'attrs');
       item.propsForKeys = getAllowPassProps(children[0], true)
     }
 

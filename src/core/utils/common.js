@@ -1,5 +1,9 @@
 import { inflate } from 'pako/lib/inflate';
 
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export const parseStickerData = async(blob) => {
   const r = await new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -17,8 +21,8 @@ export const parseStickerData = async(blob) => {
   return r;
 }
 
-export const getAllowPassProps = (vdom, reverse = false) => {
-  const props = getv(vdom, 'func.props') || {};
+export const getAllowPassProps = (vdom, reverse = false, path = 'func.props') => {
+  const props = getv(vdom, path) || {};
   const result = {}
   for (var prop in props) {
     if (!reverse && typeof props[prop] !== 'function') {

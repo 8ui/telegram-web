@@ -1,5 +1,6 @@
 import Dom from '@dom'
 import api from '@core/api'
+import classNames from 'classnames'
 import Field from '@atoms/Field'
 import Button from '@atoms/Button'
 import Dropdown from '@molucules/Dropdown'
@@ -12,9 +13,12 @@ class Form extends Dom.Component {
 
     this.state = {
       keepMeCheckbox: true,
-      country: null,
-      phone: null,
-      showButton: false,
+      country: 'RU',
+      // country: null,
+      phone: this.props.phone,
+      showButton: true,
+      // showButton: false,
+      loading: false,
     }
   }
 
@@ -24,13 +28,15 @@ class Form extends Dom.Component {
       const input = this.elem.children[0].children[1].getElementsByTagName('input')[0];
       // inputContainer.classList.add('input--with-value');
       input.value = props.dial_code + ' ';
-      input.focus();
       this.onChange()
+      setTimeout(() => input.focus())
     });
   }
 
   onChangePhone = ({ target: { value } }, name) => {
+    const { onPhoneChange } = this.props;
     this.state.phone = value;
+    onPhoneChange(value);
     this.onChange()
     // this.setState({ [name]: value })
   }
@@ -52,19 +58,30 @@ class Form extends Dom.Component {
       this.state.showButton = true;
       button.classList.remove('button--hidden');
     } else {
+      this.state.showButton = false;
       button.classList.add('button--hidden');
     }
   }
 
-  goNextPage = async() => {
-    const r = await api.sendAuthCode(this.state.phone);
-    console.log('r', r);
+  sendRequest = async() => {
+    const { goToPage } = this.props;
+    try {
+      this.setState({ loading: true });
+      // const r = await api.sendAuthCode(this.state.phone);
+      goToPage(2);
+      console.log(r, 'goToPage', 2);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.setState({ loading: false });
+    }
   }
 
   render() {
     const {
-      keepMeCheckbox, phone, country, showButton,
+      keepMeCheckbox, country, showButton, loading,
     } = this.state;
+    const { phone } = this.props;
 
     return (
       <div>
@@ -78,9 +95,10 @@ class Form extends Dom.Component {
             />
           </Field>
           <Field
-            onChange={this.onChangePhone}
+            onKeyUp={this.onChangePhone}
             label="Phone Number"
-            phone={country}
+            value={phone}
+            phoneFormat={country}
           />
           <FieldCheckbox
             onChange={this.onCheckboxChange}
@@ -89,9 +107,9 @@ class Form extends Dom.Component {
           />
         </div>
         <Button
-          className="button--hidden-"
-          onClick={this.goNextPage}
-          loading
+          className={classNames({ 'button--hidden': !showButton })}
+          onClick={this.sendRequest}
+          loading={loading}
         >
           next
         </Button>

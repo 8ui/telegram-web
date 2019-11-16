@@ -7,6 +7,7 @@
   &__logo {
     display: flex;
     justify-content: center;
+    align-items: flex-end;
     height: 170px;
     &-sticker {
       margin: 9px 0 0 -2px !important;
@@ -32,7 +33,7 @@
     &__title {
       margin: 34px 0 7px;
       height: 44px;
-      > div {
+      > div > div > div {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -55,6 +56,11 @@
   }
   &-form {
     margin-bottom: 12px;
+  }
+  &-passwd {
+    .button {
+      margin-top: 12px;
+    }
   }
   .checkbox-field {
     margin-bottom: 27px; // 15

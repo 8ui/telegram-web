@@ -3,7 +3,7 @@ import Lottie from '@atoms/Lottie'
 
 class Sticker extends Dom.Component {
   componentDidMount() {
-    console.log('sticker', this.elem);
+    // console.log('sticker', this.elem);
   }
 
   render() {

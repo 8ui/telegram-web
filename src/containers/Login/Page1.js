@@ -6,10 +6,15 @@ import './styles.scss'
 
 class Page1 extends Dom.Component {
   render() {
+    const { goToPage, onPhoneChange, phone } = this.props;
     return (
       <div>
         <Header />
-        <Form />
+        <Form
+          phone={phone}
+          goToPage={() => goToPage(2)}
+          onPhoneChange={onPhoneChange}
+        />
       </div>
     )
   }

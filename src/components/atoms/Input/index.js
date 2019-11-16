@@ -1,11 +1,22 @@
 import Dom, { addEventListener, removeEventListener } from '@dom'
 import classNames from 'classnames';
+import Loading from '@atoms/Loading'
+import ButtonIcon from '@atoms/ButtonIcon'
 import { parsePhoneNumberFromString } from 'libphonenumber-js/mobile'
 import './styles.scss'
 
 
 class Input extends Dom.Component {
-  events = 'focus keydown keyup propertychange blur paste cut copy mousedown mouseup'
+  constructor(props) {
+    super(props)
+
+    this.timeout = null
+    this.events = 'focus keydown keyup propertychange blur paste cut copy mousedown mouseup';
+
+    this.state = {
+      passwdVisible: false,
+    }
+  }
 
   componentDidMount() {
     this.input = this.elem.getElementsByTagName('input')[0]
@@ -14,6 +25,10 @@ class Input extends Dom.Component {
       this.events,
       this.onCaretMove
     );
+
+    if (this.props.focus) {
+      this.input.focus();
+    }
   }
 
   componentWillUnmount() {
@@ -26,10 +41,24 @@ class Input extends Dom.Component {
   }
 
   componentDidUpdate() {
-    // this.input = this.elem.getElementsByTagName('input')[0]
+    this.input = this.elem.getElementsByTagName('input')[0]
+    console.warn('Input', 'componentDidUpdate', this.props);
   }
 
-  timeout = null
+  onTogglePasswdVisible = (e) => {
+    const { onTogglePasswdVisible } = this.props;
+    this.state.passwdVisible = !this.state.passwdVisible
+
+    const icon = e.target.parentElement.getElementsByClassName('icon')[0]
+    icon.classList.toggle('icon-eye1');
+    icon.classList.toggle('icon-eye2');
+
+    this.input.type = this.state.passwdVisible ? 'text' : 'password'
+
+    if (onTogglePasswdVisible) onTogglePasswdVisible(this.state.passwdVisible);
+
+    this.input.focus();
+  }
 
   caretSetTimeoutAnimate = () => {
     clearTimeout(this.timeout);
@@ -61,7 +90,7 @@ class Input extends Dom.Component {
         caret.style.display = 'block';
         break;
       }
-      case 'mousedown': return caret.style.display = 'none';
+      // case 'mousedown': return caret.style.display = 'none';
       case 'mouseup': caret.style.display = 'block'; break
       case 'keydown': {
         if (select && !e.shiftKey) break;
@@ -84,15 +113,19 @@ class Input extends Dom.Component {
       default:
     }
 
-    switch (this.input.selectionDirection) {
-      case 'forward': selection = selectionEnd; break;
-      case 'none':
-      case 'backward': selection = selectionStart; break;
-      default:
+    if (['mousedown', 'focus'].includes(e.type)) {
+      switch (this.input.selectionDirection) {
+        case 'forward': selection = selectionEnd; break;
+        case 'none':
+        case 'backward': selection = selectionStart; break;
+        default:
+      }
     }
 
+    const { type } = this.input
+    const val = (type === 'password' ? '●'.repeat(value.length) : value)
     const container = this.elem.getElementsByClassName('input__caret-container')[0].children[0];
-    container.innerHTML = value.substring(0, selection + offset).replace(/\n$/, '\n\u0001');
+    container.innerHTML = val.substring(0, selection + offset).replace(/\n$/, '\n\u0001');
     caret.style.transform = `translateX(${container.offsetWidth + 16}px)`;
     this.caretSetTimeoutAnimate();
   }
@@ -112,10 +145,8 @@ class Input extends Dom.Component {
     ]
   }
 
-  renderRight = () => {
+  rightAddons = () => {
     const { rightAddons } = this.props;
-    if (!rightAddons) return null;
-
     return (
       <div className="addons">
         {rightAddons}
@@ -123,21 +154,52 @@ class Input extends Dom.Component {
     )
   }
 
-  onChange = (e) => {
-    const { onChange, phone } = this.props;
-    // console.warn('phone', phone);
-    if (phone) {
-      // console.log('number', e.target.value, phone);
-      const number = parsePhoneNumberFromString(e.target.value.replace(/\s/g, ''), phone);
-      if (number && number.isValid()) {
-        onChange({ target: { value: number.number } });
-        e.target.value = number.formatInternational();
-      } else {
-        onChange({ target: { value: null } });
-      }
-    } else {
-      onChange(e);
+  renderLoading = () => (
+    <div className="addons">
+      <Loading inverted />
+    </div>
+  )
+
+  renderPasswdToggle = () => (
+    <div className="addons">
+      <ButtonIcon onClick={this.onTogglePasswdVisible} name="eye1" />
+    </div>
+  )
+
+  renderRight = () => {
+    const { rightAddons, loading, input } = this.props;
+
+    if (loading) {
+      return this.renderLoading();
     }
+    if (rightAddons) {
+      return this.rightAddons();
+    }
+    if (input.type === 'password') {
+      return this.renderPasswdToggle()
+    }
+    return null;
+  }
+
+  onChange = (e) => {
+    const { onChange, onKeyUp, phoneFormat } = this.props;
+    if (onChange && e.type !== 'change') return ;
+    if (onKeyUp && e.type !== 'keyup') return ;
+    let value = e.target.value;
+    // console.warn('phoneFormat', phoneFormat);
+    if (phoneFormat) {
+      // console.log('number', e.target.value, phoneFormat);
+      const number = parsePhoneNumberFromString(e.target.value.replace(/\s/g, ''), phoneFormat);
+      if (number && number.isValid()) {
+        value = number.formatInternational();
+        e.target.value = value;
+      } else {
+        value = null;
+      }
+    }
+
+    if (onChange) onChange({ target: { value } });
+    if (onKeyUp) onKeyUp({ target: { value } });
   }
 
   render () {
@@ -148,13 +210,14 @@ class Input extends Dom.Component {
       input,
       rightAddons,
       value,
+      onKeyUp,
       onChange,
       error,
       errorLabel,
       parent,
       ...props
     } = this.props;
-
+    console.warn('Input error', error);
     return (
       <div
         className={classNames(
@@ -169,17 +232,18 @@ class Input extends Dom.Component {
           {this.renderLabel()}
           <span>
             <input
-              {...input}
               autocomplete="off"
-              className="input-field"
-              value={value}
               onKeyUp={this.onChange}
+              onChange={this.onChange}
               placeholder={placeholder}
               type="text"
               spellcheck="false"
+              {...input}
+              className="input-field"
+              value={value}
             />
-            {this.renderRight()}
             {this.renderCaret()}
+            {this.renderRight()}
           </span>
         </span>
       </div>

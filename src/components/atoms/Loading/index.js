@@ -1,9 +1,10 @@
 import Dom from '@dom'
+import classNames from 'classnames';
 import './styles.scss'
 
 
-const Loading = ({ name }) => (
-  <div class="loading" />
+const Loading = ({ inverted }) => (
+  <div className={classNames('loading', { 'loading--inverted': inverted })} />
 )
 
 export default Loading;

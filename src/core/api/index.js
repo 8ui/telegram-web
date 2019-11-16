@@ -16,7 +16,7 @@ const api = {
 
 const server = {
   webogram: true,
-  dev: false
+  dev: true
 };
 
 const app = {
@@ -66,7 +66,7 @@ class TelegramAPIService {
   }
 
   async signIn(phoneNumber, phoneCode, phoneCodeHash) {
-    console.log('signIn', arguments);
+    console.log('signIn', phoneNumber, phoneCode, phoneCodeHash);
     if (!phoneCodeHash) phoneCodeHash = this.data.phone_code_hash;
     const {user} = await this.client('auth.signIn', {
       phone_number: phoneNumber,
@@ -74,6 +74,7 @@ class TelegramAPIService {
       phone_code_hash: phoneCodeHash
     });
 
+    console.log('signIn', user);
     return user;
   }
 

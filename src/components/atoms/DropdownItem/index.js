@@ -13,7 +13,7 @@ class DropdownItem extends Dom.Component {
       <div
         key={key}
         className={`dropdown-item${selected ? ' dropdown-item--active' : ''}`}
-        onClick={() => onChange(code, this.props)}
+        onMouseDown={() => onChange(code, this.props)}
       >
         <div className="dropdown-item__icon">
           <Icon name={icon} />

@@ -20,9 +20,9 @@ class Logo extends Dom.Component {
 }
 
 Logo.defaultProps = {
-  renderTitle: () => 'Sign in to Telegram',
   renderImage: () => <div className="login__logo-image" />,
-  renderSubTitle: () => 'Please confirm your country and<br /> enter your phone number.',
+  renderTitle: () => 'Sign in to Telegram',
+  renderSubTitle: () => <div><span>Please confirm your country and</span><br /><span>enter your phone number.</span></div>,
 }
 
 export default Logo;

@@ -16,7 +16,7 @@ class Lottie extends Dom.Component {
       rendererSettings,
       segments
     } = options;
-    console.log('Lottie', this.elem);
+    // console.log('Lottie', this.elem);
     this.options = {
       container: this.elem,
       renderer: 'svg',
@@ -107,7 +107,11 @@ class Lottie extends Dom.Component {
   }
 
   destroy() {
-    this.anim.destroy();
+    try {
+      this.anim.destroy();
+    } catch (e) {
+
+    }
   }
 
   registerEvents(eventListeners) {

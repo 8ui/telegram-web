@@ -48,9 +48,9 @@ class Dropdown extends Dom.Component {
     e.stopPropagation();
   }
 
-  onChange = (...props) => {
+  onChange = (code, props) => {
     const { onChange } = this.props;
-    onChange(...props);
+    onChange(code, props);
     // this.state.value = props;
     // console.warn(...props);
     this.onSearch('');
@@ -58,6 +58,10 @@ class Dropdown extends Dom.Component {
     //   this.elem.children[0].children[0].id,
     //   this.renderTrigger
     // )
+    if (props.name) {
+      this.elem.getElementsByClassName('input')[0].classList.add('input--with-value')
+      this.elem.getElementsByClassName('input')[0].value = props.name;
+    }
     this.elem.classList.remove('dropdown--active');
   }
 
@@ -76,9 +80,7 @@ class Dropdown extends Dom.Component {
       // console.log(this);
       if (this.getValue().name != target.value) {
         target.value = this.getValue().name;
-        if (target.value) {
-          this.elem.getElementsByClassName('input')[0].classList.add('input--with-value')
-        }
+        this.elem.getElementsByClassName('input')[0].classList.toggle('input--with-value', !!target.value)
         setTimeout(() => this.onSearch(''), 300)
       }
     }, 50)
@@ -93,7 +95,7 @@ class Dropdown extends Dom.Component {
       <Input
         rightAddons={<Icon name="down" />}
         label={label}
-        onChange={(e) => this.onSearch(e.target.value)}
+        onKeyUp={(e) => this.onSearch(e.target.value)}
         value={this.getValue().name}
         error={error}
         input={{
