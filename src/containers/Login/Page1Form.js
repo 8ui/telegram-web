@@ -6,6 +6,7 @@ import Button from '@atoms/Button'
 import Dropdown from '@molucules/Dropdown'
 import countries from '@domain/countries.json'
 import FieldCheckbox from '@atoms/FieldCheckbox'
+import { sleep } from '@core/utils/common'
 
 const countriesData = countries.map(n => ({
   flag: n.flag,
@@ -78,21 +79,24 @@ class Form extends Dom.Component {
 
       const client = await api();
 
-      // await client.emit('clientUpdate', {
-      //   '@type': 'clientUpdateSetPhone',
-      //   phone: this.state.phone
-      // })
-      // await client.invoke({
-      //   '@type': 'setAuthenticationPhoneNumber',
-      //   phone_number: this.state.phone
-      // })
-      const result = await client.invoke({
-        _: 'getChats',
-        offset_order: '9223372036854775807',
-        offset_chat_id: 0,
-        limit: 100
+      await client.emit('clientUpdate', {
+        '@type': 'clientUpdateSetPhone',
+        phone: this.state.phone
       })
-      console.warn(result);
+      await client.invoke({
+        '@type': 'setAuthenticationPhoneNumber',
+        phone_number: this.state.phone
+      })
+
+      // await sleep(2000)
+
+      // const result = await client.invoke({
+      //   '@type': 'getChats',
+      //   offset_order: '9223372036854775807',
+      //   offset_chat_id: 0,
+      //   limit: 100
+      // })
+      // console.warn(result);
       // await client.emit('clientUpdate', {
       //   '@type': "updateAuthorizationState",
       //   phone: this.state.phone

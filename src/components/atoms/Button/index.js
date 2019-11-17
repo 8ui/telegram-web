@@ -46,7 +46,7 @@ class Button extends Dom.Component {
           {loading ? <span>{loadingText}</span> : <span>{children}</span>}
         </span>
         <span className="button__active"></span>
-        {loading && <Loading />}
+        {loading && <Loading inverted />}
       </div>
     )
   }

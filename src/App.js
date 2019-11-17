@@ -1,89 +1,54 @@
 import Dom from '@dom'
+import classNames from 'classnames';
 import api from '@core/api';
-// import storage from '@core/storage';
 import './styles/index.scss'
 
+import Chat from './containers/Chat/index'
 import Login from './containers/Login/index'
-
-// import Login from './containers/Login/index-user'
-
-// const setPhoneNumber = phone => {
-//   TdLibController.send({
-//       '@type': 'setAuthenticationPhoneNumber',
-//       phone_number: phone
-//     })
-//     .then(result => {
-//       TdLibController.clientUpdate({
-//         '@type': 'clientUpdateSetPhoneResult',
-//         result
-//       });
-//     })
-//     .catch(error => {
-//       console.log('!phone error');
-//       TdLibController.clientUpdate({
-//         '@type': 'clientUpdateSetPhoneError',
-//         error
-//       });
-//     });
-// };
-//
-// const onUpdate = update => {
-//   console.log('onUpdate', update);
-//   switch (update['@type']) {
-//     case 'updateAuthorizationState':
-//       {
-//         switch (update.authorization_state['@type']) {
-//           case 'authorizationStateWaitTdlibParameters':
-//             TdLibController.sendTdParameters();
-//             break;
-//           case 'authorizationStateWaitEncryptionKey':
-//             TdLibController.send({
-//               '@type': 'checkDatabaseEncryptionKey'
-//             });
-//             break;
-//           case 'authorizationStateWaitPhoneNumber':
-//             setPhoneNumber('+79274615910');
-//             break;
-//           default:
-//         }
-//       }
-//     default:
-//   }
-// }
-
-// const init = () => {
-//   TdLibController.init();
-//   TdLibController.addListener('update', onUpdate);
-//
-//   // setTimeout(() => {
-//   //   TdLibController.clientUpdate({
-//   //       '@type': 'clientUpdateSetPhone',
-//   //       phone: '+79274615910'
-//   //   });
-//   // }, 2000)
-// }
-//
-// init();
 
 
 class App extends Dom.Component {
   constructor(props) {
     super(props)
-    this.init();
+    this.state = {
+      auth: false,
+    }
   }
 
-  async init() {
-    // const client = await api();
-    // const data = await client.invoke({
-    //   _: 'auth.sendCode',
-    //   phone_number: '+79274615910',
-    // });
-    // console.warn('data', data);
+  async componentWillMount() {
+    console.warn('componentWillMount');
+    const client = await api();
+
+    client.on('update', this.updater);
+  }
+
+  async componentDidUnmount() {
+    const client = await api();
+
+    client.removeListener('update', this.updater);
+  }
+
+  updater = (update) => {
+    switch (updater._) {
+      case 'updateAuthorizationState': {
+        switch (update.authorization_state._) {
+          case 'authorizationStateReady':
+            this.setState({ auth: true });
+            console.warn('!!!!authorizationStateReady!!!!');
+            break;
+          default:
+        }
+      }
+    }
   }
 
   render() {
+    const { auth } = this.state;
     return (
-      <Login />
+      <div>
+        <div className={classNames("main-container", { 'main-container--hidden': auth })}>{!auth && <Login />}</div>
+        <div className={classNames("main-container", { 'main-container--hidden': !auth })}>{auth && <Chat />}</div>
+      </div>
     );
   }
 }

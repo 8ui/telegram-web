@@ -7,8 +7,8 @@ import './styles.scss'
 class Login extends Dom.Component {
   state = {
     page: 1,
-    phone: '+7 900 327 06 61',
-    // phone: '+7 927 461 59 10',
+    // phone: '+7 900 327 06 61',
+    phone: '+7 927 461 59 10',
     // phone: null,
   }
 

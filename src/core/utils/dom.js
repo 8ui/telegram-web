@@ -100,7 +100,7 @@ class Component {
 
   componentDidMount() { }
 
-  componentWillmount() { }
+  componentWillMount() { }
 
   componentWillUnmount() { }
 
@@ -116,7 +116,7 @@ class Component {
     try {
       this.id = el.getAttribute('id');
 
-      this.componentWillmount()
+      this.componentWillMount()
       if (!el) throw 'no element';
       this.elem = el;
       // if (this.constructor.name === 'Input') console.log('componentDidMount', el);
@@ -517,6 +517,7 @@ const renderDom = (id, component) => {
   window._updateCount++;
   // console.log('component', component);
   const d = new component()
+  d.componentWillMount();
   const el = document.getElementById(id);
   dom = setKeysToDom(d.render(), 'app');
   // console.log('dom', dom);
@@ -526,6 +527,7 @@ const renderDom = (id, component) => {
   } else {
     el.append(html);
   }
+  d.componentDidUnmount();
 }
 
 const getElementByKey = (obj, key) => {
@@ -573,7 +575,7 @@ const setKeysToDom = (item, key) => {
     })
   } catch (e) {
     console.log(e);
-    console.log(item);
+    console.trace();
   }
 
   return item;
@@ -598,7 +600,12 @@ const createElement = (tag, attrs, ...children) => {
 
   try {
     if (tag) {
-      if (typeof children === 'number') children = String(children);
+      children = children.map(n => {
+        if (typeof n === 'number') {
+          return String(n);
+        }
+        return n;
+      })
       return {
         tag, attrs, children: flat(children).filter(n => !!n),
       }

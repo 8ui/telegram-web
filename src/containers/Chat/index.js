@@ -1,9 +1,10 @@
 import Dom from '@dom'
 
-import SidebarLeft from '@organisms/SidebarLeft'
+import Chats from '@organisms/Chats'
 import SidebarRight from '@organisms/SidebarRight'
 import Chat from '@organisms/Chat'
 import './styles.scss'
+
 
 class Home extends Dom.Component {
   onClick = (e) => {
@@ -14,7 +15,7 @@ class Home extends Dom.Component {
     const data = { foo: 'bar' };
     return (
       <div className="messenger">
-        <SidebarLeft />
+        <Chats />
         <Chat />
         <SidebarRight />
       </div>

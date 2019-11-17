@@ -57,6 +57,29 @@ class Page2 extends Dom.Component {
     this.loadStickers();
   }
 
+  async componentWillMount() {
+    const client = await api();
+    client.on('update', this.updater)
+  }
+
+  updater = (update) => {
+    switch (update._) {
+      case 'updateAuthorizationState': {
+        switch (update.authorization_state._) {
+          case 'authorizationStateWaitPassword':
+            this.setPageState('enterPwd');
+            break;
+          case 'authorizationStateWaitRegistration':
+            goToPage(3);
+            break;
+          default:
+        }
+        break;
+      }
+      default:
+    }
+  }
+
   setPageState = (name, update = true) => {
     const params = {
       ...this.pageStates[name],
@@ -102,6 +125,7 @@ class Page2 extends Dom.Component {
 
     if (loading) return;
     let state = {}
+
     try {
       this.setState({ loading: true });
       const client = await api();
@@ -113,8 +137,8 @@ class Page2 extends Dom.Component {
         last_name: 'B'
       })
       // goToPage(3);
-      await sleep(600);
-      state = { ...state, ...this.setPageState('enterPwd', false) };
+      // await sleep(600);
+      // state = { ...state, ...this.setPageState('enterPwd', false) };
     } catch (e) {
       console.error(e);
       state = { ...state, ...this.setPageState('enterCodeError', false) };
@@ -123,16 +147,21 @@ class Page2 extends Dom.Component {
   }
 
   sendPasswdRequest = async() => {
-    const { loading, code } = this.state;
-    const { goToPage, phone } = this.props;
+    const { loading, passwd } = this.state;
+    const { goToPage } = this.props;
 
     if (loading) return;
     let state = {}
+
     try {
       this.setState({ loading: true });
-      // const r = await api.signIn(phone, code);
-      await sleep(600);
-      return goToPage(3);
+      const client = await api();
+
+      await client.invoke({
+        '@type': 'checkAuthenticationPassword',
+        password: passwd,
+      })
+
     } catch (e) {
       console.error(e);
       state = { ...state, ...this.setPageState('enterPwdError', false) };

@@ -157,7 +157,7 @@ class Input extends Dom.Component {
 
   renderLoading = () => (
     <div className="addons">
-      <Loading inverted />
+      <Loading />
     </div>
   )
 

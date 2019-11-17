@@ -37,7 +37,8 @@
   &__actions {
     padding: 0 13px 0 0;
 
-    > a {
+    > .button-icon {
+      display: inline-flex;
       margin-left: 4px;
     }
   }

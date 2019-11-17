@@ -1,10 +1,3 @@
-/*
- *  Copyright (c) 2018-present, Evgeny Nadymov
- *
- * This source code is licensed under the GPL v.3.0 license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 import {
   EventEmitter
 } from 'events';
@@ -22,14 +15,8 @@ const useReadFile = true;
 const useDownloadFile = true;
 
 class FileStore extends EventEmitter {
-  constructor() {
-    super();
-
-    this._init()
-  }
-
-  _init = async() => {
-    this.client = await api();
+  _init = (client) => {
+    this.client = client
 
     console.warn('STORAGE INITED');
 

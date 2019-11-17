@@ -11,6 +11,37 @@
     }
   }
 
+  @keyframes buttonActiveAnimate {
+    0% {
+      opacity: 0.08;
+      transform: scale(0);
+    }
+    80% {
+      opacity: 0.08;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+
+  &__active {
+    pointer-events: none;
+    border-radius: 50%;
+    width: 0px;
+    height: 0px;
+    transform: scale(0);
+    top: 0;
+    left: 0;
+    opacity: 0;
+    display: block;
+    position: absolute;
+    background-color: black;
+
+    animation-duration: 0.9s;
+    animation-iteration-count: 1
+  }
+
   &__wrapper {
     padding: 0 0 0 9px;
     display: flex;
@@ -19,6 +50,11 @@
     height: 72px;
     border-radius: 10px;
     transition: background-color 0.4s ease;
+    overflow: hidden;
+    position: relative;
+    > div {
+      pointer-events: none;
+    }
   }
 
   &__body {
@@ -80,7 +116,7 @@
     justify-content: center;
     min-width: 24px;
     height: 24px;
-    padding: 1px 5px 0;
+    padding: 0 4px;
     color: white;
     font-weight: 500;
     font-size: 13.5px;

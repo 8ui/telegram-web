@@ -2,6 +2,7 @@ import { Client } from 'tdl'
 import { TDLib } from 'tdl-tdlib-wasm'
 import { APP_ID, APP_HASH } from '@core/constants'
 
+
 function createClient(options) {
   return new Promise(resolve => {
     Module()
@@ -12,31 +13,24 @@ function createClient(options) {
   })
 }
 
-function databaseExists(dbname, callback) {
-  var req = indexedDB.open(dbname);
-  var existed = true;
-  req.onsuccess = function() {
-    req.result.close();
-    if (!existed) indexedDB.deleteDatabase(dbname);
-    callback(existed);
-  };
-  req.onupgradeneeded = function() {
-    existed = false;
-  };
-}
-
 let client;
-let connected;
+let inited;
 
 async function main() {
-  if (client) {
-    if (!connected) {
-      connected = true;
-      await client.connect();
-    }
-    return client;
+  if (!client && inited) {
+    return new Promise((resolve) => {
+      var interval;
+      interval = setInterval(() => {
+        if (client) {
+          clearInterval(interval);
+          resolve(client);
+        }
+      }, 50)
+    })
   }
+  else if (client) return client;
   try {
+    inited = true;
     client = await createClient({
       apiId: APP_ID,
       apiHash: APP_HASH,
@@ -44,20 +38,14 @@ async function main() {
       useDatabase: true,
     })
 
-    console.warn('client', client);
+    console.warn({ client });
 
-    // client
-    //   .on('update', update => {
-    //     // console.log('Got update:', JSON.stringify(update, null, 2))
-    //   })
-    //   .on('error', err => {
-    //     console.error('Got error:', JSON.stringify(err, null, 2))
-    //   })
-    //   .on('destroy', () => {
-    //     console.log('destroy event')
-    //   })
+    client
+      .on('error', err => {
+        console.error('Got error:', JSON.stringify(err, null, 2))
+      })
 
-    client.on('update', (...props) => console.warn('UPDATE', ...props))
+    client.on('update', updater)
 
     client.on('clientUpdate', (...props) => console.warn('CLIENT_UPDATE', ...props))
 
@@ -98,14 +86,33 @@ async function main() {
     // })
     // console.warn('898_PROXY_PROXY:', proxy)
 
-    const dbName = 'tdlib'
-    databaseExists(dbName, exists => {
-      client.emit('clientUpdate', { '@type': 'clientUpdateDatabaseExists', exists });
-    });
+    await client.connect();
 
     return client;
   } catch (e) {
     console.error('test dlib', e);
+  }
+}
+
+const updater = (update) => {
+  console.log('update', update);
+  switch (update._) {
+    // case 'updateUser': {
+    //   window.user = update.user
+    // }
+    case 'updateAuthorizationState': {
+      switch (update.authorization_state._) {
+        case 'authorizationStateWaitTdlibParameters':
+          break;
+        case 'authorizationStateWaitEncryptionKey':
+          console.error('checkDatabaseEncryptionKey');
+          client.invoke({ '@type': 'checkDatabaseEncryptionKey' });
+          break;
+        default:
+      }
+      break;
+    }
+    default:
   }
 }
 
