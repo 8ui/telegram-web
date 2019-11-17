@@ -90,7 +90,7 @@ class Input extends Dom.Component {
         caret.style.display = 'block';
         break;
       }
-      // case 'mousedown': return caret.style.display = 'none';
+      case 'mousedown': return caret.style.display = 'none';
       case 'mouseup': caret.style.display = 'block'; break
       case 'keydown': {
         if (select && !e.shiftKey) break;
@@ -113,7 +113,7 @@ class Input extends Dom.Component {
       default:
     }
 
-    if (['mousedown', 'focus'].includes(e.type)) {
+    if (['focus'].includes(e.type)) {
       switch (this.input.selectionDirection) {
         case 'forward': selection = selectionEnd; break;
         case 'none':
@@ -146,9 +146,10 @@ class Input extends Dom.Component {
   }
 
   rightAddons = () => {
-    const { rightAddons } = this.props;
+    const { rightAddons, rightAddonsClick } = this.props;
+    const props = rightAddonsClick ? {onClick: rightAddonsClick} : {};
     return (
-      <div className="addons">
+      <div {...props} className="addons">
         {rightAddons}
       </div>
     )

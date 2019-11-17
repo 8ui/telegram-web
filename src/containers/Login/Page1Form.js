@@ -74,9 +74,33 @@ class Form extends Dom.Component {
     const { goToPage } = this.props;
     try {
       this.setState({ loading: true });
-      // const r = await api.sendAuthCode(this.state.phone);
+      // const r = await api.sendAuthCode();
+
+      const client = await api();
+
+      // await client.emit('clientUpdate', {
+      //   '@type': 'clientUpdateSetPhone',
+      //   phone: this.state.phone
+      // })
+      // await client.invoke({
+      //   '@type': 'setAuthenticationPhoneNumber',
+      //   phone_number: this.state.phone
+      // })
+      const result = await client.invoke({
+        _: 'getChats',
+        offset_order: '9223372036854775807',
+        offset_chat_id: 0,
+        limit: 100
+      })
+      console.warn(result);
+      // await client.emit('clientUpdate', {
+      //   '@type': "updateAuthorizationState",
+      //   phone: this.state.phone
+      // })
+      // console.warn('data', data);
+
       goToPage(2);
-      console.log(r, 'goToPage', 2);
+      console.log('goToPage', 2);
     } catch (e) {
       console.error(e);
     } finally {

@@ -104,7 +104,14 @@ class Page2 extends Dom.Component {
     let state = {}
     try {
       this.setState({ loading: true });
-      // const r = await api.signIn(phone, code);
+      const client = await api();
+
+      await client.invoke({
+        '@type': 'checkAuthenticationCode',
+        code: code,
+        first_name: 'A',
+        last_name: 'B'
+      })
       // goToPage(3);
       await sleep(600);
       state = { ...state, ...this.setPageState('enterPwd', false) };

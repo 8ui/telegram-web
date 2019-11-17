@@ -1,8 +1,9 @@
 import Dom from '@dom'
+import api from '@core/api';
+// import storage from '@core/storage';
 import './styles/index.scss'
 
 import Login from './containers/Login/index'
-
 
 // import Login from './containers/Login/index-user'
 
@@ -66,6 +67,20 @@ import Login from './containers/Login/index'
 
 
 class App extends Dom.Component {
+  constructor(props) {
+    super(props)
+    this.init();
+  }
+
+  async init() {
+    // const client = await api();
+    // const data = await client.invoke({
+    //   _: 'auth.sendCode',
+    //   phone_number: '+79274615910',
+    // });
+    // console.warn('data', data);
+  }
+
   render() {
     return (
       <Login />

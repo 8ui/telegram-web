@@ -32,11 +32,11 @@
             <stop
                     id="stop4"
                     offset="0"
-                    stop-color="#62a4f0"/>
+                    stop-color="#4090F3"/>
             <stop
                     id="stop6"
                     offset="1"
-                    stop-color="#62a4f0"/>
+                    stop-color="#4090F3"/>
         </linearGradient>
     </defs>
     <circle

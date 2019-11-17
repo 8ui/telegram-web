@@ -1,4 +1,5 @@
 import Dom from '@dom'
+import { $ } from '@core/utils'
 import Icon from '@atoms/Icon'
 import Input from '@atoms/Input'
 import DropdownMenu from '@molucules/DropdownMenu'
@@ -28,8 +29,7 @@ class Dropdown extends Dom.Component {
   }
 
   onShow = () => {
-    // console.log(this);
-    this.elem.getElementsByClassName('dropdown-menu__wrapper')[0].scrollTop = 0
+    $('.dropdown-menu__wrapper', this.elem).scrollTop = 0
     this.elem.classList.add('dropdown--active')
     this.elem.classList.remove('dropdown--hide');
   }
@@ -58,8 +58,8 @@ class Dropdown extends Dom.Component {
     //   this.renderTrigger
     // )
     if (props.name) {
-      this.elem.getElementsByClassName('input')[0].classList.add('input--with-value')
-      this.elem.getElementsByClassName('input')[0].value = props.name;
+      $('.input', this.elem).classList.add('input--with-value')
+      $('.input', this.elem).value = props.name;
     }
     this.elem.classList.remove('dropdown--active');
   }
@@ -79,11 +79,15 @@ class Dropdown extends Dom.Component {
       // console.log(this);
       if (this.getValue().name != target.value) {
         target.value = this.getValue().name;
-        this.elem.getElementsByClassName('input')[0].classList.toggle('input--with-value', !!target.value)
+        $('.input', this.elem).classList.toggle('input--with-value', !!target.value)
         setTimeout(() => this.onSearch(''), 300)
       }
     }, 50)
   }
+
+  renderRight = () => (
+    <Icon name="down" />
+  )
 
   renderTrigger = () => {
     const { error } = this.state;
@@ -92,7 +96,8 @@ class Dropdown extends Dom.Component {
     if (children) return children;
     return (
       <Input
-        rightAddons={<Icon name="down" />}
+        rightAddons={this.renderRight()}
+        rightAddonsClick={() => $('input', this.elem).focus()}
         label={label}
         onKeyUp={(e) => this.onSearch(e.target.value)}
         value={this.getValue().name}

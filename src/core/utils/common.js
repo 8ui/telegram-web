@@ -1,5 +1,19 @@
 import { inflate } from 'pako/lib/inflate';
 
+export const $ = (name, parent) => {
+  try {
+    parent = parent || document;
+    if (name.indexOf('.') !== -1) {
+      return parent.getElementsByClassName(name.replace('.', ''))[0]
+    }
+
+    return parent.getElementsByTagName(name)[0]
+  } catch (e) {
+    console.log(name, parent);
+    return undefined;
+  }
+}
+
 export function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
