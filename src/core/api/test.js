@@ -7,9 +7,9 @@ console.warn('Module', Module);
 
 function createClient (options) {
   return new Promise(resolve => {
-    console.warn('createClient', options);
     Module()
       .then(module => {
+        console.warn('createClient', options);
         const tdlib = new TDLib(module)
         resolve(new Client(tdlib, options))
       })
@@ -20,44 +20,49 @@ function createClient (options) {
 // Works at least in TDLib v1.3.0
 
 async function main() {
-  const client = await createClient({
-    apiId: APP_ID,
-    apiHash: APP_HASH,
-    useDefaultVerbosityLevel: true,
-  })
+  try {
+    const client = await createClient({
+      apiId: APP_ID,
+      apiHash: APP_HASH,
+      useDefaultVerbosityLevel: true,
+    })
+    console.warn('898_CLIENT_INITED:')
 
-  client.on('error', console.error)
+    client.on('error', console.error)
 
-  await client.connect()
+    await client.connect()
+    console.warn('898_CLIENT_CONNECTED:')
 
-  const proxy = await client.invoke({
-    _: 'setProxy',
-    type: {
-      proxy: 'proxySocks5',
-      server_: '88.99.124.114',
-      port_: '54801',
-      username_: 'ae9c72247d0',
-      password_: 'olTXpUcHgFoaUta04',
-    }
-  })
+    // const proxy = await client.invoke({
+    //   _: 'setProxy',
+    //   type: {
+    //     proxy: 'proxySocks5',
+    //     server_: '88.99.124.114',
+    //     port_: '54801',
+    //     username_: 'ae9c72247d0',
+    //     password_: 'olTXpUcHgFoaUta04',
+    //   }
+    // })
+    // console.warn('898_PROXY_PROXY:', proxy)
 
-  console.log('Proxy:', proxy)
+    // await client.login();
 
-  // await client.login();
-
-  await client.login(() => ({
-    getPhoneNumber: retry => retry
-      ? Promise.reject('Invalid phone number')
-      : Promise.resolve('+9996620001'),
-    getAuthCode: retry => retry
-      ? Promise.reject('Invalid auth code')
-      : Promise.resolve('22222'),
-    getPassword: (passwordHint, retry) => retry
-      ? Promise.reject('Invalid password')
-      : Promise.resolve('abcdef'),
-    getName: () =>
-      Promise.resolve({ firstName: 'John', lastName: 'Doe' })
-  }));
+    await client.login(() => ({
+      getPhoneNumber: retry => retry
+        ? Promise.reject('Invalid phone number')
+        : Promise.resolve('+9996620001'),
+      getAuthCode: retry => retry
+        ? Promise.reject('Invalid auth code')
+        : Promise.resolve('22222'),
+      getPassword: (passwordHint, retry) => retry
+        ? Promise.reject('Invalid password')
+        : Promise.resolve('abcdef'),
+      getName: () =>
+        Promise.resolve({ firstName: 'John', lastName: 'Doe' })
+    }));
+  } catch (e) {
+    console.error('test dlib', e);
+  }
 
   // ...
 }
