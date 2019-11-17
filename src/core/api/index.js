@@ -1,3 +1,5 @@
+import test from './test'
+
 // import Module from './hello'
 //
 // console.warn('Module', Module);

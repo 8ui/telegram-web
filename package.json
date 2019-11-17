@@ -11,15 +11,13 @@
     "clean": "rm -rf target"
   },
   "dependencies": {
-    "deep-diff": "^1.0.2",
     "deep-equal": "^1.1.0",
-    "events": "^3.0.0",
     "libphonenumber-js": "^1.7.26",
-    "localforage": "^1.7.3",
     "lottie-web": "^5.5.9",
-    "mtproto-storage-browser": "^0.1.5",
     "pako": "^1.0.10",
-    "telegram-mtproto": "^3.0.5-unstable",
+    "tdl": "^6.0.1",
+    "tdl-tdlib-ffi": "^1.4.0",
+    "tdl-tdlib-wasm": "^0.5.0",
     "telejs": "^0.1.7-b"
   },
   "devDependencies": {

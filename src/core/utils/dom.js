@@ -1,5 +1,4 @@
 import deepEqual2 from 'deep-equal';
-import diff from 'deep-diff';
 import {
   flat,
   deepEqual,
