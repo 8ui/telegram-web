@@ -7,6 +7,13 @@ import Dropdown from '@molucules/Dropdown'
 import countries from '@domain/countries.json'
 import FieldCheckbox from '@atoms/FieldCheckbox'
 
+const countriesData = countries.map(n => ({
+  flag: n.flag,
+  code: n.code,
+  name: n.name,
+  placeholder: n.dial_code
+}))
+
 class Form extends Dom.Component {
   constructor(props) {
     super(props)
@@ -27,7 +34,7 @@ class Form extends Dom.Component {
       // const inputContainer = this.elem.children[0].children[1].children[0];
       const input = this.elem.children[0].children[1].getElementsByTagName('input')[0];
       // inputContainer.classList.add('input--with-value');
-      input.value = props.dial_code + ' ';
+      input.value = props.placeholder + ' ';
       this.onChange()
       setTimeout(() => input.focus())
     });
@@ -82,13 +89,12 @@ class Form extends Dom.Component {
       keepMeCheckbox, country, showButton, loading,
     } = this.state;
     const { phone } = this.props;
-
     return (
       <div>
         <div className="login-form">
           <Field>
             <Dropdown
-              data={countries}
+              data={countriesData}
               value={country}
               onChange={this.onChangeCountry}
               label="Country"

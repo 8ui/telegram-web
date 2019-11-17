@@ -1,4 +1,5 @@
 import Dom from '@dom'
+import Icon from '@atoms/Icon';
 
 class Logo extends Dom.Component {
   render() {
@@ -20,7 +21,7 @@ class Logo extends Dom.Component {
 }
 
 Logo.defaultProps = {
-  renderImage: () => <div className="login__logo-image" />,
+  renderImage: () => <div className="login__logo-image"><img src={require('@images/logo.svg')} alt=""/></div>,
   renderTitle: () => 'Sign in to Telegram',
   renderSubTitle: () => <div><span>Please confirm your country and</span><br /><span>enter your phone number.</span></div>,
 }

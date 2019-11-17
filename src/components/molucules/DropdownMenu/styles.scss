@@ -12,11 +12,10 @@
   animation-duration: 0.25s;
   animation-fill-mode: forwards;
   pointer-events: none;
+  height: 376px;
 
   &__wrapper {
     padding: 9px 0;
-    max-height: 376px;
-    overflow-y: auto;
 
     @include themed() {
       background-color: t('systemBackground');

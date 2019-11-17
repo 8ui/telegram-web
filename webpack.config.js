@@ -100,13 +100,13 @@ module.exports = {
           }
         ]
       },
-      {
-		    test: /\.svg/,
-		    use: {
-	        loader: 'svg-url-loader',
-	        options: {}
-		    }
-			},
+      // {
+		  //   test: /\.svg/,
+		  //   use: {
+	    //     loader: 'svg-url-loader',
+	    //     options: {}
+		  //   }
+			// },
       {
         test: /\.(gif|png|jpe?g)$/i,
         use: [

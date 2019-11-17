@@ -20,19 +20,23 @@ class AvatarPicker extends Dom.Component {
 
   onSuccess = () => {
     console.log('success');
+    this.setState({
+      image: true,
+    })
     this.onClose();
   }
 
   renderImage = () => {
+    // const { image } = this.state
     return (
       <div className="avatar-picker__image">
-        <img src="" />
+
       </div>
     )
   }
 
   render() {
-    const { modal } = this.state;
+    const { modal, image } = this.state;
     const {
       className,
       onChange,
@@ -41,7 +45,7 @@ class AvatarPicker extends Dom.Component {
 
     return (
       <div>
-        <div className="avatar-picker">
+        <div className={classNames('avatar-picker', { 'avatar-picker--selected': image })}>
           {this.renderImage()}
           <div onClick={this.onOpen} className="avatar-picker__picker">
             <Icon name="cameraadd" />

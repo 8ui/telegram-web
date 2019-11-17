@@ -13,8 +13,6 @@ class Dropdown extends Dom.Component {
       search: '',
       error: false,
     }
-
-    this.menuRef = Dom.createRef();
   }
 
   componentDidUpdate() {
@@ -26,7 +24,6 @@ class Dropdown extends Dom.Component {
   }
 
   componentWillUnmount() {
-    console.warn('Dropdown', 'document.body.removeEventListener', 'mousedown');
     document.body.removeEventListener('mousedown', this.onHide);
   }
 
@@ -37,7 +34,8 @@ class Dropdown extends Dom.Component {
     this.elem.classList.remove('dropdown--hide');
   }
 
-  onHide = () => {
+  onHide = (e) => {
+    if (e.target.classList.contains('scroll-view__scrollbar-bar')) return;
     if (this.elem.classList.contains('dropdown--active')) {
       this.elem.classList.remove('dropdown--active');
       this.elem.classList.add('dropdown--hide');
@@ -45,6 +43,7 @@ class Dropdown extends Dom.Component {
   }
 
   onDropdownClick = (e) => {
+    if (e.target.classList.contains('scroll-view__scrollbar-bar')) return;
     e.stopPropagation();
   }
 
@@ -123,7 +122,6 @@ class Dropdown extends Dom.Component {
 
     return (
       <DropdownMenu
-        ref={this.menuRef}
         data={items}
         {...props}
         onChange={this.onChange}
