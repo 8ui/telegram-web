@@ -6,7 +6,7 @@ class ScrollView extends Dom.Component {
   constructor(props) {
     super(props);
 
-    this.offset = 4;
+    this.offset = 10;
     this.y = 0;
     this.scale = 0.1;
     this.oldY = 0;
