@@ -20,10 +20,10 @@ class Sticker extends Dom.Component {
             animationData,
             renderer: 'svg',
             rendererSettings: {
-              preserveAspectRatio: 'xMinYMin slice', // Supports the same options as the svg element's preserveAspectRatio property
+              preserveAspectRatio: 'xMinYMin slice',
               clearCanvas: false,
-              progressiveLoad: true, // Boolean, only svg renderer, loads dom elements when needed. Might speed up initialization for large number of elements.
-              hideOnTransparent: true, //Boolean, only svg renderer, hides elements when opacity reaches 0 (defaults to true)
+              progressiveLoad: true,
+              hideOnTransparent: true,
               className: 'lottie-svg'
             }
           }}

@@ -527,7 +527,6 @@ const renderDom = (id, component) => {
   } else {
     el.append(html);
   }
-  d.componentDidUnmount();
 }
 
 const getElementByKey = (obj, key) => {

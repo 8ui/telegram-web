@@ -1,5 +1,11 @@
 {
+  "presets": [
+    ["@babel/preset-env", {
+      "useBuiltIns": false,
+    }],
+  ],
   "plugins": [
+    "@babel/plugin-transform-runtime",
     "@babel/plugin-syntax-jsx",
     ["@babel/plugin-transform-react-jsx", {
       "pragma": "Dom.createElement",

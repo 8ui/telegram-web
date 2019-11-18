@@ -59,10 +59,17 @@ class Page2 extends Dom.Component {
 
   async componentWillMount() {
     const client = await api();
-    client.on('update', this.updater)
+    console.error('componentWillMount client', client);
+    client.on('update', this.updater);
+  }
+
+  async componentDidUnmount() {
+    const client = await api();
+    client.off('update', this.updater)
   }
 
   updater = (update) => {
+    console.error('Page2 update', update);
     switch (update._) {
       case 'updateAuthorizationState': {
         switch (update.authorization_state._) {
@@ -111,7 +118,7 @@ class Page2 extends Dom.Component {
 
   checkCode = (code) => {
     // TODO: simple check
-    return true;
+    return code.length === 5;
   }
 
   onCodeChange = ({ target: { value } }) => {
@@ -238,7 +245,7 @@ class Page2 extends Dom.Component {
         error={codeError}
         errorLabel="Invalid Code"
         label="Code"
-        onChange={this.onCodeChange}
+        onKeyUp={this.onCodeChange}
       />
     )
   }

@@ -21,7 +21,7 @@ class Form extends Dom.Component {
 
     this.state = {
       keepMeCheckbox: true,
-      country: 'RU',
+      country: '',
       // country: null,
       phone: this.props.phone,
       showButton: true,
