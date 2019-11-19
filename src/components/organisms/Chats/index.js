@@ -7,7 +7,7 @@ import SearchBox from '@molucules/SearchBox'
 import ScrollView from '@molucules/ScrollView'
 import ContactItem from '@molucules/ContactItem'
 import './styles.scss'
-import data from './data.json'
+
 
 class SidebarLeft extends Dom.Component {
   constructor(props) {
