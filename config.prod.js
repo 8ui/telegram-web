@@ -24,7 +24,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'public'),
-    filename: NODE_ENV === 'development' ? '[name].js' : '[name][hash:6].js'
+    filename: NODE_ENV === 'development' ? '[name].js' : '[name][hash:8].js'
   },
   devtool: NODE_ENV === 'development' ? 'source-map' : 'none',
   watch: NODE_ENV === 'development',
